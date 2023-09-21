@@ -9,7 +9,8 @@ import java.util.Date;
 public class Professor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "professor_sequence")
+    @SequenceGenerator(name = "professor_sequence", sequenceName = "prof_seq")
     private Integer id;
     private String firstName;
     private String lastName;

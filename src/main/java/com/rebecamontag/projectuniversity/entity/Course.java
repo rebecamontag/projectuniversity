@@ -1,15 +1,13 @@
 package com.rebecamontag.projectuniversity.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Course {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_sequence")
+    @SequenceGenerator(name = "course_sequence", sequenceName = "crs_seq")
     private Integer id;
     private Professor professor;
     private ClassRoom classRoom;
