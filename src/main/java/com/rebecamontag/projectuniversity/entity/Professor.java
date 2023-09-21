@@ -4,6 +4,7 @@ import com.rebecamontag.projectuniversity.enumeration.Gender;
 import jakarta.persistence.*;
 
 import java.util.Date;
+
 @Entity
 public class Professor {
 

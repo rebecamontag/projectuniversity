@@ -11,8 +11,8 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String professorId;
-    private String classRoomId;
+    private Professor professor;
+    private ClassRoom classRoom;
     private String name;
     private String description;
 
@@ -20,10 +20,10 @@ public class Course {
     public Course() {
     }
 
-    public Course(Integer id, String professorId, String classRoomId, String name, String description) {
+    public Course(Integer id, Professor professor, ClassRoom classRoom, String name, String description) {
         this.id = id;
-        this.professorId = professorId;
-        this.classRoomId = classRoomId;
+        this.professor = professor;
+        this.classRoom = classRoom;
         this.name = name;
         this.description = description;
     }
@@ -36,20 +36,20 @@ public class Course {
         this.id = id;
     }
 
-    public String getProfessorId() {
-        return professorId;
+    public Professor getProfessor() {
+        return professor;
     }
 
-    public void setProfessorId(String professorId) {
-        this.professorId = professorId;
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
     }
 
-    public String getClassRoomId() {
-        return classRoomId;
+    public ClassRoom getClassRoom() {
+        return classRoom;
     }
 
-    public void setClassRoomId(String classRoomId) {
-        this.classRoomId = classRoomId;
+    public void setClassRoom(ClassRoom classRoom) {
+        this.classRoom = classRoom;
     }
 
     public String getName() {
