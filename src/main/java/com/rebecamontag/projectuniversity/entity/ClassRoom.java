@@ -1,48 +1,50 @@
 package com.rebecamontag.projectuniversity.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.Id;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
-public class ClassRoom {
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class ClassRoom implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "class_room_sequence")
-    @SequenceGenerator(name = "class_room_sequence", sequenceName = "clsrm_seq")
+    @SequenceGenerator(name = "class_room_sequence", sequenceName = "clsrm_seq", initialValue = 1, allocationSize = 1)
     private Integer id;
+
+    @OneToOne(mappedBy = "classRoom")
     private Integer roomNumber;
+
     private String name;
 
 
-    public ClassRoom() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClassRoom classRoom = (ClassRoom) o;
+        return id.equals(classRoom.id);
     }
 
-    public ClassRoom(Integer id, Integer roomNumber, String name) {
-        this.id = id;
-        this.roomNumber = roomNumber;
-        this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(Integer roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -1,68 +1,65 @@
 package com.rebecamontag.projectuniversity.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.Id;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-public class Course {
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class Course implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_sequence")
-    @SequenceGenerator(name = "course_sequence", sequenceName = "crs_seq")
+    @SequenceGenerator(name = "course_sequence", sequenceName = "crs_seq", initialValue = 1, allocationSize = 1)
     private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "professor_id")
     private Professor professor;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "class_room_id", referencedColumnName = "id")
     private ClassRoom classRoom;
+
     private String name;
+
     private String description;
 
+    @ManyToMany(mappedBy = "courses")
+    private List<Student> students;
 
-    public Course() {
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return id.equals(course.id);
     }
 
-    public Course(Integer id, Professor professor, ClassRoom classRoom, String name, String description) {
-        this.id = id;
-        this.professor = professor;
-        this.classRoom = classRoom;
-        this.name = name;
-        this.description = description;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Professor getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(Professor professor) {
-        this.professor = professor;
-    }
-
-    public ClassRoom getClassRoom() {
-        return classRoom;
-    }
-
-    public void setClassRoom(ClassRoom classRoom) {
-        this.classRoom = classRoom;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
