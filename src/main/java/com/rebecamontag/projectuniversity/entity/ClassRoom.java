@@ -3,6 +3,7 @@ package com.rebecamontag.projectuniversity.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -29,8 +29,10 @@ public class ClassRoom implements Serializable {
     @SequenceGenerator(name = "class_room_sequence", sequenceName = "clsrm_seq", initialValue = 1, allocationSize = 1)
     private Integer id;
 
-    @OneToOne(mappedBy = "classRoom")
     private Integer roomNumber;
+
+    @OneToOne(mappedBy = "classRoom")
+    private Course course;
 
     private String name;
 
