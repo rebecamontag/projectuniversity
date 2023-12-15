@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,14 +25,14 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Course implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_sequence")
-    @SequenceGenerator(name = "course_sequence", sequenceName = "crs_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "course_sequence", sequenceName = "crs_seq", allocationSize = 1)
     private Integer id;
 
     @ManyToOne
@@ -47,6 +48,7 @@ public class Course implements Serializable {
     private String description;
 
     @ManyToMany(mappedBy = "courses")
+    @ToString.Exclude
     private List<Student> students;
 
 

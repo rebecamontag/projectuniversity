@@ -10,12 +10,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -24,21 +26,21 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Professor implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "professor_sequence")
-    @SequenceGenerator(name = "professor_sequence", sequenceName = "prof_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "professor_sequence", sequenceName = "prof_seq", allocationSize = 1)
     private Integer id;
 
     private String firstName;
 
     private String lastName;
 
-    private Date birthDate;
+    private LocalDate birthDate;
 
     private String document;
 

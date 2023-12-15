@@ -22,11 +22,10 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClassRoom implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "class_room_sequence")
-    @SequenceGenerator(name = "class_room_sequence", sequenceName = "clsrm_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "class_room_sequence", sequenceName = "clsrm_seq", allocationSize = 1)
     private Integer id;
 
     private Integer roomNumber;

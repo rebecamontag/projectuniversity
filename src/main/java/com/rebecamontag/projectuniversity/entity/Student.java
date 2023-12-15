@@ -12,6 +12,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,14 +27,14 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence")
-    @SequenceGenerator(name = "student_sequence", sequenceName = "std_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "student_sequence", sequenceName = "std_seq", allocationSize = 1)
     private Integer id;
 
     private String firstName;
@@ -51,7 +52,9 @@ public class Student implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "registration",
-            joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+                joinColumns = @JoinColumn(name = "student_id"),
+                inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @ToString.Exclude
     private List<Course> courses;
 
 
