@@ -5,5 +5,5 @@ uma relação de cada tipo no projeto.
 
 Diagrama entidade relacionamento para entendimento do projeto:
 
-![DER](https://github.com/rebecamontag/projectuniversity/assets/projectuniversityder.png)
+![DER](https://github.com/rebecamontag/projectuniversity/blob/review/assets/projectuniversityder.png)
 
