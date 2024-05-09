@@ -19,7 +19,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,7 +41,7 @@ public class Student implements Serializable {
 
     private String lastName;
 
-    private Date birthDate;
+    private LocalDate birthDate;
 
     private String document;
 

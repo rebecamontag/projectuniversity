@@ -18,7 +18,6 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,6 +49,7 @@ public class Professor implements Serializable {
     private Gender gender;
 
     @OneToMany(mappedBy = "professor")
+    @ToString.Exclude
     private List<Course> courses;
 
 
