@@ -1,10 +1,9 @@
 package com.rebecamontag.projectuniversity.service;
 
 import com.rebecamontag.projectuniversity.entity.Professor;
-import com.rebecamontag.projectuniversity.exception.ProfessorException;
+import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
-import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,28 +11,31 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProfessorService {
 
-    @Autowired
-    private ProfessorRepository professorRepository;
-
-
-    public ProfessorService(ProfessorRepository professorRepository) {
-        this.professorRepository = professorRepository;
-    }
+    private final ProfessorRepository professorRepository;
 
     public Professor create(Professor professor) {
+        Professor validatedProfessor = findByDocument(professor.getDocument());
+        if (null != validatedProfessor) throw new NotFoundException("Documento já existente, não foi possível criar este professor");
+
         return professorRepository.save(professor);
+    }
+
+    public Professor findByDocument(String document) {
+        Optional<Professor> professor = professorRepository.findByDocument(document);
+        return professor.orElseThrow(() -> new NotFoundException("Professor não encontrado com o documento " + document));
     }
 
     public Professor findById(Integer id) {
         Optional<Professor> professor = professorRepository.findById(id);
-        return professor.orElseThrow(() -> new ProfessorException("Professor não encontrado com o id " + id));
+        return professor.orElseThrow(() -> new NotFoundException("Professor não encontrado com o id " + id));
     }
 
     public Professor findByName(String name) {
         Optional<Professor> professor = professorRepository.findByName(name);
-        return professor.orElseThrow(() -> new ProfessorException("Não foi possível encontrar o professor chamado " + name));
+        return professor.orElseThrow(() -> new NotFoundException("Não foi possível encontrar o professor chamado " + name));
     }
 
     public Page<Professor> findAll(Pageable pageable) {
@@ -44,7 +46,7 @@ public class ProfessorService {
     }
 
     public void update(Integer id, Professor professor) {
-        Professor updatedProfessor = professorRepository.findById(id).orElseThrow();
+        Professor updatedProfessor = findById(id);
         updatedProfessor.setFirstName(professor.getFirstName());
         updatedProfessor.setLastName(professor.getLastName());
         updatedProfessor.setBirthDate(professor.getBirthDate());
