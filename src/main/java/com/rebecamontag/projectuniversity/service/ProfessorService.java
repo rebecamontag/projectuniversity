@@ -1,6 +1,7 @@
 package com.rebecamontag.projectuniversity.service;
 
 import com.rebecamontag.projectuniversity.entity.Professor;
+import com.rebecamontag.projectuniversity.exception.ProfessorException;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,14 @@ public class ProfessorService {
         return professorRepository.save(professor);
     }
 
-    public Professor findById(Integer id) throws BadRequestException {
+    public Professor findById(Integer id) {
         Optional<Professor> professor = professorRepository.findById(id);
-        return professor.orElseThrow(() -> new BadRequestException("Professor não encontrado com o id " + id));
+        return professor.orElseThrow(() -> new ProfessorException("Professor não encontrado com o id " + id));
     }
 
-    public Professor findByName(String name) throws BadRequestException {
+    public Professor findByName(String name) {
         Optional<Professor> professor = professorRepository.findByName(name);
-        return professor.orElseThrow(() -> new BadRequestException("Não foi possível encontrar o professor chamado " + name));
+        return professor.orElseThrow(() -> new ProfessorException("Não foi possível encontrar o professor chamado " + name));
     }
 
     public Page<Professor> findAll(Pageable pageable) {
