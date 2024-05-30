@@ -1,4 +1,4 @@
-package com.rebecamontag.projectuniversity.entity;
+package com.rebecamontag.projectuniversity.model.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

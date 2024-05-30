@@ -1,4 +1,4 @@
-package com.rebecamontag.projectuniversity.enumeration;
+package com.rebecamontag.projectuniversity.model.enumeration;
 
 public enum Gender {
 
