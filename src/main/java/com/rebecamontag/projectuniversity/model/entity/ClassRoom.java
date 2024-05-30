@@ -1,4 +1,4 @@
-package com.rebecamontag.projectuniversity.entity;
+package com.rebecamontag.projectuniversity.model.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

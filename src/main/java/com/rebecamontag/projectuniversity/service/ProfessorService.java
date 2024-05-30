@@ -1,10 +1,12 @@
 package com.rebecamontag.projectuniversity.service;
 
-import com.rebecamontag.projectuniversity.entity.Professor;
+import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -38,11 +40,8 @@ public class ProfessorService {
         return professor.orElseThrow(() -> new NotFoundException("Não foi possível encontrar o professor chamado " + name));
     }
 
-    public Page<Professor> findAll(Pageable pageable) {
-//        PageRequest pageRequest = PageRequest.of(page, size);
-//        Page<Professor> allProfessors = professorRepository.findAll(pageRequest);
-
-        return professorRepository.findAll(pageable);
+    public Page<Professor> findAll(Integer page, Integer size) {
+        return professorRepository.findAll(PageRequest.of(page, size));
     }
 
     public void update(Integer id, Professor professor) {

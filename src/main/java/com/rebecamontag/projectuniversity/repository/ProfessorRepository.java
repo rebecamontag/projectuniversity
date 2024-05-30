@@ -1,6 +1,6 @@
 package com.rebecamontag.projectuniversity.repository;
 
-import com.rebecamontag.projectuniversity.entity.Professor;
+import com.rebecamontag.projectuniversity.model.entity.Professor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
