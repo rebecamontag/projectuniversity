@@ -19,7 +19,7 @@ public class ProfessorStubs {
                 .document("12345678900")
                 .email("teste@gmail.com")
                 .gender(Gender.FEMALE)
-                .courses(any())
+                .courses(Collections.singletonList(any()))
                 .build();
 
         return professor;

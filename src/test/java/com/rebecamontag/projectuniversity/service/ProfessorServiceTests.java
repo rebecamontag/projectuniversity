@@ -5,6 +5,7 @@ import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.stubs.ProfessorStubs;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
@@ -39,29 +38,28 @@ public class ProfessorServiceTests {
         professor = ProfessorStubs.createProfessor();
     }
 
-    @Test
-    public void shouldFindByDocumentWithSuccess() {
-        when(professorRepository.findByDocument(professor.getDocument())).thenReturn(Optional.of(professor));
+    @Nested
+    class FindByDocumentTest {
 
-        Professor expectedProfessor = professorService.findByDocument(professor.getDocument());
+        @Test
+        public void shouldFindByDocumentWithSuccess() {
+            when(professorRepository.findByDocument(professor.getDocument())).thenReturn(Optional.of(professor));
 
-        assertEquals(professor, expectedProfessor);
-        verify(professorRepository, times(1)).findByDocument(professor.getDocument());
-        verifyNoMoreInteractions(professorRepository);
-    }
+            Professor expectedProfessor = professorService.findByDocument(professor.getDocument());
 
-    @Test
-    public void shouldThrowExceptionWhenNotValidDocument() {
-        when(professorRepository.findByDocument(professor.getDocument())).thenThrow(new NotFoundException("Teste Exceção"));
+            assertEquals(professor, expectedProfessor);
+            verify(professorRepository, times(1)).findByDocument(professor.getDocument());
+            verifyNoMoreInteractions(professorRepository);
+        }
 
-        assertThrows(NotFoundException.class, () -> {
-            professorService.findByDocument(professor.getDocument());
-        });
+        @Test
+        public void shouldThrowExceptionWhenNotValidDocument() {
+            when(professorRepository.findByDocument(professor.getDocument())).thenThrow(new NotFoundException("Professor não encontrado com o documento " + professor.getDocument()));
 
-//        final NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> {
-//            professorService.findByDocument(professor.getDocument());
-//        });
-//
-//        assertThat(notFoundException.getMessage(), is("Professor não encontrado com o documento " + professor.getDocument()));
+            assertThrows(
+                    NotFoundException.class,
+                    () -> professorService.findByDocument(professor.getDocument()),
+                    "Professor não encontrado com o documento ".concat(professor.getDocument()));
+        }
     }
 }

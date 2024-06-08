@@ -24,13 +24,13 @@ public class ProfessorService {
     }
 
     public Professor findByDocument(String document) {
-        Optional<Professor> professor = professorRepository.findByDocument(document);
-        return professor.orElseThrow(() -> new NotFoundException("Professor não encontrado com o documento " + document));
+        return professorRepository.findByDocument(document)
+                .orElseThrow(() -> new NotFoundException("Professor not found with document number " + document));
     }
 
     public Professor findById(Integer id) {
-        Optional<Professor> professor = professorRepository.findById(id);
-        return professor.orElseThrow(() -> new NotFoundException("Professor não encontrado com o id " + id));
+        return professorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Professor not found with id " + id));
     }
 
     public Professor findByName(String name) {
