@@ -1,4 +1,4 @@
-package com.rebecamontag.projectuniversity.stubs;
+package com.rebecamontag.projectuniversity.stubs.entity;
 
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
