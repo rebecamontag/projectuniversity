@@ -36,15 +36,12 @@ public class ProfessorService {
     }
 
     public ProfessorDTO findById(Integer id) {
-         return professorRepository.findById(id)
-                 .map(ProfessorMapper::toDTO)
-                 .orElseThrow(() -> new NotFoundException("Professor not found with id " + id));
-
+         return ProfessorMapper.toDTO(findByIdOrElseThrow(id));
     }
 
     public ProfessorDTO findByName(String name) {
         Optional<ProfessorDTO> professorDTO = professorRepository.findByName(name);
-        return professorDTO.orElseThrow(() -> new NotFoundException("Não foi possível encontrar o professor chamado " + name));
+        return professorDTO.orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name));
     }
 
     public Page<ProfessorDTO> findAll(Integer page, Integer size) {
@@ -52,19 +49,24 @@ public class ProfessorService {
                 .map(ProfessorMapper::toDTO);
     }
 
-    public void update(Integer id, Professor professor) {
-        Professor updatedProfessor = findById(id);
-        updatedProfessor.setFirstName(professor.getFirstName());
-        updatedProfessor.setLastName(professor.getLastName());
-        updatedProfessor.setBirthDate(professor.getBirthDate());
-        updatedProfessor.setDocument(professor.getDocument());
-        updatedProfessor.setEmail(professor.getEmail());
-        updatedProfessor.setCourses(professor.getCourses());
+    public void update(Integer id, ProfessorDTO professorDTO) {
+        Professor updatedProfessor = findByIdOrElseThrow(id);
+        updatedProfessor.setFirstName(professorDTO.firstName());
+        updatedProfessor.setLastName(professorDTO.lastName());
+        updatedProfessor.setBirthDate(professorDTO.birthDate());
+        updatedProfessor.setDocument(professorDTO.document());
+        updatedProfessor.setEmail(professorDTO.email());
 
         professorRepository.save(updatedProfessor);
     }
 
     public void deleteById(Integer id) {
+        findByIdOrElseThrow(id);
         professorRepository.deleteById(id);
+    }
+
+    private Professor findByIdOrElseThrow(Integer id) {
+        return professorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Professor not found with id " + id));
     }
 }

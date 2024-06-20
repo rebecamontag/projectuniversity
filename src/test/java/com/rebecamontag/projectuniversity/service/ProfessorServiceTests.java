@@ -4,7 +4,6 @@ import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
-import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
@@ -16,11 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -44,6 +43,29 @@ public class ProfessorServiceTests {
     public void setUp() {
         professor = ProfessorStubs.createProfessor();
         professorDTO = ProfessorDTOStubs.createProfessorDTO();
+    }
+
+    @Nested
+    class CreateTest {
+
+        @Test
+        public void shouldCreateProfessorWithSuccess() {
+            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.empty());
+            when(professorRepository.save(professor)).thenReturn(professor);
+
+            ProfessorDTO expectedProfessor = professorService.create(professorDTO);
+
+            assertEquals(professorDTO, expectedProfessor);
+        }
+
+        @Test
+        public void shouldThrowExceptionWhenDocumentAlreadyExist() {
+            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.of(professorDTO));
+
+            assertThrows(DuplicateException.class,
+                    () -> professorService.create(professorDTO),
+                    "Document %s already exists".formatted(professorDTO.document()));
+        }
     }
 
     @Nested
@@ -111,36 +133,25 @@ public class ProfessorServiceTests {
         }
 
         @Test
-        public void shouldThrowExceptionWhenNotValidDocument() {
-            when(professorRepository.findByName(professorDTO.firstName())).thenThrow(new NotFoundException("Não foi possível encontrar o professor chamado " + professorDTO.firstName()));
+        public void shouldThrowExceptionWhenNotValidName() {
+            when(professorRepository.findByName(professorDTO.firstName())).thenThrow(new NotFoundException("It was not possible to find professor called " + professorDTO.firstName()));
 
             assertThrows(
                     NotFoundException.class,
                     () -> professorService.findByName(professorDTO.firstName()),
-                    "Professor não encontrado com o documento ".concat(professorDTO.firstName()));
+                    "It was not possible to find professor called ".concat(professorDTO.firstName()));
         }
     }
 
     @Nested
-    class CreateTest {
+    class DeleteTests {
 
         @Test
-        public void shouldCreateProfessorWithSuccess() {
-            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.empty());
-            when(professorRepository.save(professor)).thenReturn(professor);
+        public void shouldDeleteWithSuccess() {
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.of(professor));
+            doNothing().when(professorRepository).deleteById(professorDTO.id());
 
-            ProfessorDTO expectedProfessor = professorService.create(professorDTO);
-
-            assertEquals(professorDTO, expectedProfessor);
-        }
-
-        @Test
-        public void shouldThrowExceptionWhenDocumentAlreadyExist() {
-            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.of(professorDTO));
-
-            assertThrows(DuplicateException.class,
-                    () -> professorService.create(professorDTO),
-                    "Document %s already exists".formatted(professorDTO.document()));
+            professorService.deleteById(professorDTO.id());
         }
     }
 }

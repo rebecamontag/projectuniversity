@@ -8,8 +8,9 @@ import java.time.LocalDate;
 public class ProfessorDTOStubs {
 
     public static ProfessorDTO createProfessorDTO() {
-        ProfessorDTO professorDTO = new ProfessorDTO(
-                001,
+
+        return new ProfessorDTO(
+                1,
                 "Rebeca",
                 "M. Pusinhol",
                 LocalDate.now(),
@@ -17,7 +18,5 @@ public class ProfessorDTOStubs {
                 "teste@gmail.com",
                 Gender.FEMALE
         );
-
-        return professorDTO;
     }
 }
