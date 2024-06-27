@@ -4,6 +4,7 @@ import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
+import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,7 +48,7 @@ public class ProfessorServiceTests {
     }
 
     @Nested
-    class CreateTest {
+    class CreateTests {
 
         @Test
         public void shouldCreateProfessorWithSuccess() {
@@ -140,6 +142,37 @@ public class ProfessorServiceTests {
                     NotFoundException.class,
                     () -> professorService.findByName(professorDTO.firstName()),
                     "It was not possible to find professor called ".concat(professorDTO.firstName()));
+        }
+    }
+
+    @Nested
+    class UpdateTests {
+
+        @Test
+        public void shouldUpdateProfessorDataWithSuccess() {
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.of(professor));
+
+            ProfessorDTO dto = new ProfessorDTO(1,
+                    "Rebeca",
+                    "M. Pusinhol",
+                    LocalDate.now(),
+                    "12345678900",
+                    "teste2@gmail.com",
+                    Gender.FEMALE);
+
+            professorService.update(dto.id(), dto);
+
+            verify(professorRepository, times(1)).save(professor);
+        }
+
+        @Test
+        public void shouldThrowExceptionWhenNotValidIdToUpdate() {
+            when(professorRepository.findById(professorDTO.id())).thenThrow(new NotFoundException("Professor not found with id " + professorDTO.id()));
+
+            assertThrows(
+                    NotFoundException.class,
+                    () -> professorService.update(professorDTO.id(), professorDTO),
+                    "Professor not found with id ".concat(professorDTO.id().toString()));
         }
     }
 
