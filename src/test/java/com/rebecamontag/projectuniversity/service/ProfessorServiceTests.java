@@ -8,6 +8,7 @@ import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -142,6 +148,68 @@ public class ProfessorServiceTests {
                     NotFoundException.class,
                     () -> professorService.findByName(professorDTO.firstName()),
                     "It was not possible to find professor called ".concat(professorDTO.firstName()));
+        }
+    }
+
+    @Nested
+    class FindAllTest {
+
+        @Test
+        public void shouldFindAllWithSuccess() {
+            ProfessorDTO dto = new ProfessorDTO(1,
+                    "Rebeca",
+                    "M. Pusinhol",
+                    LocalDate.now(),
+                    "12345678900",
+                    "teste@gmail.com",
+                    Gender.FEMALE);
+
+            Professor professor1 = Professor.builder()
+                    .id(1)
+                    .firstName("Rebeca")
+                    .lastName("M. Pusinhol")
+                    .birthDate(LocalDate.now())
+                    .document("12345678900")
+                    .email("teste@gmail.com")
+                    .gender(Gender.FEMALE)
+                    .build();
+
+            Page<Professor> professorPage = new PageImpl<>(List.of(professor, professor1));
+
+            when(professorRepository.findAll(PageRequest.of(1, 2))).thenReturn(professorPage);
+
+            Page<ProfessorDTO> dtoPage = professorService.findAll(1, 2);
+
+            assertNotNull(dtoPage);
+            assertEquals(1, dtoPage.getTotalPages());
+            assertEquals(2, dtoPage.getTotalElements());
+            assertEquals(2, dtoPage.getNumberOfElements());
+            assertEquals(2, dtoPage.getContent().size());
+            dtoPage.getContent().stream()
+                    .filter(professorDTO1 -> professorDTO1.id().equals(professor.getId()))
+                    .findFirst()
+                    .ifPresentOrElse(professorDTO1 -> {
+                        assertEquals(professor.getFirstName(), professorDTO1.firstName());
+                        assertEquals(professor.getLastName(), professorDTO1.lastName());
+                        assertEquals(professor.getBirthDate(), professorDTO1.birthDate());
+                        assertEquals(professor.getDocument(), professorDTO1.document());
+                        assertEquals(professor.getEmail(), professorDTO1.email());
+                        assertEquals(professor.getGender(), professorDTO1.gender());
+                    }, Assertions::fail);
+            dtoPage.getContent().stream()
+                    .filter(professorDTO1 -> professorDTO1.id().equals(professor1.getId()))
+                    .findFirst()
+                    .ifPresentOrElse(professorDTO1 -> {
+                        assertEquals(professor1.getFirstName(), professorDTO1.firstName());
+                        assertEquals(professor1.getLastName(), professorDTO1.lastName());
+                        assertEquals(professor1.getBirthDate(), professorDTO1.birthDate());
+                        assertEquals(professor1.getDocument(), professorDTO1.document());
+                        assertEquals(professor1.getEmail(), professorDTO1.email());
+                        assertEquals(professor1.getGender(), professorDTO1.gender());
+                    }, Assertions::fail);
+
+            assertThat(dtoPage.getContent()).containsExactlyInAnyOrder(professorDTO, dto);
+
         }
     }
 
