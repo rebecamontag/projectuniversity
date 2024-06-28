@@ -49,7 +49,7 @@ public class ProfessorService {
                 .map(ProfessorMapper::toDTO);
     }
 
-    public void update(Integer id, ProfessorDTO professorDTO) {
+    public ProfessorDTO update(Integer id, ProfessorDTO professorDTO) {
         Professor updatedProfessor = findByIdOrElseThrow(id);
         updatedProfessor.setFirstName(professorDTO.firstName());
         updatedProfessor.setLastName(professorDTO.lastName());
@@ -57,7 +57,7 @@ public class ProfessorService {
         updatedProfessor.setDocument(professorDTO.document());
         updatedProfessor.setEmail(professorDTO.email());
 
-        professorRepository.save(updatedProfessor);
+        return ProfessorMapper.toDTO(professorRepository.save(updatedProfessor));
     }
 
     public void deleteById(Integer id) {

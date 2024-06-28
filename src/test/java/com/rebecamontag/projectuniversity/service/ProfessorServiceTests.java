@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -92,12 +93,12 @@ public class ProfessorServiceTests {
 
         @Test
         public void shouldThrowExceptionWhenNotValidDocument() {
-            when(professorRepository.findByDocument(professorDTO.document())).thenThrow(new NotFoundException("Professor not found with document number " + professorDTO.document()));
+            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.empty());
 
             assertThrows(
                     NotFoundException.class,
                     () -> professorService.findByDocument(professorDTO.document()),
-                    "Professor não encontrado com o documento ".concat(professorDTO.document()));
+                    "Professor not found with document ".concat(professorDTO.document()));
         }
     }
 
@@ -117,7 +118,7 @@ public class ProfessorServiceTests {
 
         @Test
         public void shouldThrowExceptionWhenNotValidId() {
-            when(professorRepository.findById(professorDTO.id())).thenThrow(new NotFoundException("Professor not found with id " + professorDTO.id()));
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.empty());
 
             assertThrows(
                     NotFoundException.class,
@@ -142,7 +143,7 @@ public class ProfessorServiceTests {
 
         @Test
         public void shouldThrowExceptionWhenNotValidName() {
-            when(professorRepository.findByName(professorDTO.firstName())).thenThrow(new NotFoundException("It was not possible to find professor called " + professorDTO.firstName()));
+            when(professorRepository.findByName(professorDTO.firstName())).thenReturn(Optional.empty());
 
             assertThrows(
                     NotFoundException.class,
@@ -219,6 +220,7 @@ public class ProfessorServiceTests {
         @Test
         public void shouldUpdateProfessorDataWithSuccess() {
             when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.of(professor));
+            when(professorRepository.save(professor)).thenReturn(professor);
 
             ProfessorDTO dto = new ProfessorDTO(1,
                     "Rebeca",
@@ -228,14 +230,22 @@ public class ProfessorServiceTests {
                     "teste2@gmail.com",
                     Gender.FEMALE);
 
-            professorService.update(dto.id(), dto);
+            ProfessorDTO professorDTO = professorService.update(dto.id(), dto);
+
+            assertNotNull(professorDTO);
+            assertEquals(dto.firstName(), professorDTO.firstName());
+            assertEquals(dto.lastName(), professorDTO.lastName());
+            assertEquals(dto.birthDate(), professorDTO.birthDate());
+            assertEquals(dto.document(), professorDTO.document());
+            assertEquals(dto.email(), professorDTO.email());
+            assertEquals(dto.gender(), professorDTO.gender());
 
             verify(professorRepository, times(1)).save(professor);
         }
 
         @Test
         public void shouldThrowExceptionWhenNotValidIdToUpdate() {
-            when(professorRepository.findById(professorDTO.id())).thenThrow(new NotFoundException("Professor not found with id " + professorDTO.id()));
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.empty());
 
             assertThrows(
                     NotFoundException.class,
@@ -253,12 +263,13 @@ public class ProfessorServiceTests {
             doNothing().when(professorRepository).deleteById(professorDTO.id());
 
             professorService.deleteById(professorDTO.id());
+
+            verify(professorRepository, times(1)).deleteById(professorDTO.id());
         }
 
         @Test
         public void shouldThrowExceptionWhenNotValidIdToDelete() {
-            when(professorRepository.findById(professorDTO.id())).thenThrow(new NotFoundException("Professor not found with id " + professorDTO.id()));
-            //doNothing().when(professorRepository).deleteById(professorDTO.id());
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.empty());
 
             assertThrows(
                     NotFoundException.class,
