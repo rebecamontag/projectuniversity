@@ -1,13 +1,14 @@
 package com.rebecamontag.projectuniversity.service;
 
-import com.rebecamontag.projectuniversity.model.entity.Professor;
+import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
+import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
+import com.rebecamontag.projectuniversity.model.entity.Professor;
+import com.rebecamontag.projectuniversity.model.mapper.ProfessorMapper;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,45 +19,54 @@ public class ProfessorService {
 
     private final ProfessorRepository professorRepository;
 
-    public Professor create(Professor professor) {
-        Professor validatedProfessor = findByDocument(professor.getDocument());
-        if (null != validatedProfessor) throw new NotFoundException("Documento já existente, não foi possível criar este professor");
+    public ProfessorDTO create(ProfessorDTO professorDTO) {
+        professorRepository.findByDocument(professorDTO.document())
+                .ifPresent(professor -> {
+                    throw new DuplicateException("Document %s already exists".formatted(professor.document()));
+                });
 
-        return professorRepository.save(professor);
+        Professor professor = ProfessorMapper.toEntity(professorDTO);
+
+        return ProfessorMapper.toDTO(professorRepository.save(professor));
     }
 
-    public Professor findByDocument(String document) {
-        Optional<Professor> professor = professorRepository.findByDocument(document);
-        return professor.orElseThrow(() -> new NotFoundException("Professor não encontrado com o documento " + document));
+    public ProfessorDTO findByDocument(String document) {
+        return professorRepository.findByDocument(document)
+                .orElseThrow(() -> new NotFoundException("Professor not found with document number " + document));
     }
 
-    public Professor findById(Integer id) {
-        Optional<Professor> professor = professorRepository.findById(id);
-        return professor.orElseThrow(() -> new NotFoundException("Professor não encontrado com o id " + id));
+    public ProfessorDTO findById(Integer id) {
+         return ProfessorMapper.toDTO(findByIdOrElseThrow(id));
     }
 
-    public Professor findByName(String name) {
-        Optional<Professor> professor = professorRepository.findByName(name);
-        return professor.orElseThrow(() -> new NotFoundException("Não foi possível encontrar o professor chamado " + name));
+    public ProfessorDTO findByName(String name) {
+        Optional<ProfessorDTO> professorDTO = professorRepository.findByName(name);
+        return professorDTO.orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name));
     }
 
-    public Page<Professor> findAll(Integer page, Integer size) {
-        return professorRepository.findAll(PageRequest.of(page, size));
+    public Page<ProfessorDTO> findAll(Integer page, Integer size) {
+        return professorRepository.findAll(PageRequest.of(page, size))
+                .map(ProfessorMapper::toDTO);
     }
 
-    public void update(Integer id, Professor professor) {
-        Professor updatedProfessor = findById(id);
-        updatedProfessor.setFirstName(professor.getFirstName());
-        updatedProfessor.setLastName(professor.getLastName());
-        updatedProfessor.setBirthDate(professor.getBirthDate());
-        updatedProfessor.setDocument(professor.getDocument());
-        updatedProfessor.setEmail(professor.getEmail());
-        updatedProfessor.setCourses(professor.getCourses());
+    public ProfessorDTO update(Integer id, ProfessorDTO professorDTO) {
+        Professor updatedProfessor = findByIdOrElseThrow(id);
+        updatedProfessor.setFirstName(professorDTO.firstName());
+        updatedProfessor.setLastName(professorDTO.lastName());
+        updatedProfessor.setBirthDate(professorDTO.birthDate());
+        updatedProfessor.setDocument(professorDTO.document());
+        updatedProfessor.setEmail(professorDTO.email());
 
-        professorRepository.save(updatedProfessor);
+        return ProfessorMapper.toDTO(professorRepository.save(updatedProfessor));
     }
 
     public void deleteById(Integer id) {
+        findByIdOrElseThrow(id);
         professorRepository.deleteById(id);
+    }
+
+    private Professor findByIdOrElseThrow(Integer id) {
+        return professorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Professor not found with id " + id));
     }
 }
