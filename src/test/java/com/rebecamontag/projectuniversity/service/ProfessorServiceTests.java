@@ -69,7 +69,7 @@ public class ProfessorServiceTests {
 
         @Test
         public void shouldThrowExceptionWhenDocumentAlreadyExist() {
-            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.of(professorDTO));
+            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.of(professor));
 
             assertThrows(DuplicateException.class,
                     () -> professorService.create(professorDTO),
@@ -82,7 +82,7 @@ public class ProfessorServiceTests {
 
         @Test
         public void shouldFindByDocumentWithSuccess() {
-            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.of(professorDTO));
+            when(professorRepository.findByDocument(professorDTO.document())).thenReturn(Optional.of(professor));
 
             ProfessorDTO expectedProfessor = professorService.findByDocument(professorDTO.document());
 
@@ -132,7 +132,7 @@ public class ProfessorServiceTests {
 
         @Test
         public void shouldFindByNameWithSuccess() {
-            when(professorRepository.findByName(professorDTO.firstName())).thenReturn(Optional.of(professorDTO));
+            when(professorRepository.findByName(professorDTO.firstName())).thenReturn(Optional.of(professor));
 
             ProfessorDTO expectedProfessor = professorService.findByName(professorDTO.firstName());
 

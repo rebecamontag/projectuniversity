@@ -11,8 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ProfessorService {
@@ -22,7 +20,7 @@ public class ProfessorService {
     public ProfessorDTO create(ProfessorDTO professorDTO) {
         professorRepository.findByDocument(professorDTO.document())
                 .ifPresent(professor -> {
-                    throw new DuplicateException("Document %s already exists".formatted(professor.document()));
+                    throw new DuplicateException("Document %s already exists".formatted(professor.getDocument()));
                 });
 
         Professor professor = ProfessorMapper.toEntity(professorDTO);
@@ -31,8 +29,8 @@ public class ProfessorService {
     }
 
     public ProfessorDTO findByDocument(String document) {
-        return professorRepository.findByDocument(document)
-                .orElseThrow(() -> new NotFoundException("Professor not found with document number " + document));
+        return ProfessorMapper.toDTO(professorRepository.findByDocument(document)
+                .orElseThrow(() -> new NotFoundException("Professor not found with document number " + document)));
     }
 
     public ProfessorDTO findById(Integer id) {
@@ -40,8 +38,8 @@ public class ProfessorService {
     }
 
     public ProfessorDTO findByName(String name) {
-        Optional<ProfessorDTO> professorDTO = professorRepository.findByName(name);
-        return professorDTO.orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name));
+        return ProfessorMapper.toDTO(professorRepository.findByName(name)
+                .orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name)));
     }
 
     public Page<ProfessorDTO> findAll(Integer page, Integer size) {
