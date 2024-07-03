@@ -3,6 +3,7 @@ package com.rebecamontag.projectuniversity.service;
 import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
+import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.mapper.ProfessorMapper;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
@@ -42,9 +43,15 @@ public class ProfessorService {
                 .orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name)));
     }
 
-    public Page<ProfessorDTO> findAll(Integer page, Integer size) {
-        return professorRepository.findAll(PageRequest.of(page, size))
+    public ProfessorPageableResponse findAll(Integer page, Integer size) {
+        Page<ProfessorDTO> professorDTOPage = professorRepository.findAll(PageRequest.of(page, size))
                 .map(ProfessorMapper::toDTO);
+
+        return new ProfessorPageableResponse(
+                professorDTOPage.getTotalPages(),
+                professorDTOPage.getNumberOfElements(),
+                professorDTOPage.getNumber(),
+                professorDTOPage.getContent());
     }
 
     public ProfessorDTO update(Integer id, ProfessorDTO professorDTO) {

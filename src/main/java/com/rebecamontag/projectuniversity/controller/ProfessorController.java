@@ -1,6 +1,7 @@
 package com.rebecamontag.projectuniversity.controller;
 
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
+import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.service.ProfessorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "professor")
+@RequestMapping(value = "professors")
 @RequiredArgsConstructor
 public class ProfessorController {
 
@@ -56,9 +57,9 @@ public class ProfessorController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProfessorDTO>> findAll(@RequestParam(value="page", defaultValue="0") Integer page,
-                                                      @RequestParam(value="size", defaultValue="0") Integer size) {
-        Page<ProfessorDTO> professorDTO = professorService.findAll(page, size);
+    public ResponseEntity<ProfessorPageableResponse> findAll(@RequestParam(value="page", defaultValue="0") Integer page,
+                                                             @RequestParam(value="size", defaultValue="0") Integer size) {
+        ProfessorPageableResponse professorDTO = professorService.findAll(page, size);
         return ResponseEntity.ok().body(professorDTO);
     }
 

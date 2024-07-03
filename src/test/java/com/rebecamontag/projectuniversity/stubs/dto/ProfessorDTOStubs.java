@@ -19,4 +19,17 @@ public class ProfessorDTOStubs {
                 Gender.FEMALE
         );
     }
+
+    public static ProfessorDTO createProfessorDTO2() {
+
+        return new ProfessorDTO(
+                2,
+                "Matheus",
+                "Pusinhol",
+                LocalDate.now(),
+                "98765432100",
+                "teste2@gmail.com",
+                Gender.MALE
+        );
+    }
 }

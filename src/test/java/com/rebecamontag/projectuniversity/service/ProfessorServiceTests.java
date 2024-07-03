@@ -3,6 +3,7 @@ package com.rebecamontag.projectuniversity.service;
 import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
+import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
@@ -179,14 +180,14 @@ public class ProfessorServiceTests {
 
             when(professorRepository.findAll(PageRequest.of(1, 2))).thenReturn(professorPage);
 
-            Page<ProfessorDTO> dtoPage = professorService.findAll(1, 2);
+            ProfessorPageableResponse dtoPage = professorService.findAll(1, 2);
 
             assertNotNull(dtoPage);
-            assertEquals(1, dtoPage.getTotalPages());
-            assertEquals(2, dtoPage.getTotalElements());
-            assertEquals(2, dtoPage.getNumberOfElements());
-            assertEquals(2, dtoPage.getContent().size());
-            dtoPage.getContent().stream()
+            assertEquals(1, dtoPage.totalPages());
+            assertEquals(2, dtoPage.itemsPerPage());
+            assertEquals(0, dtoPage.currentPage());
+            assertEquals(2, dtoPage.professorDTOList().size());
+            dtoPage.professorDTOList().stream()
                     .filter(professorDTO1 -> professorDTO1.id().equals(professor.getId()))
                     .findFirst()
                     .ifPresentOrElse(professorDTO1 -> {
@@ -197,7 +198,7 @@ public class ProfessorServiceTests {
                         assertEquals(professor.getEmail(), professorDTO1.email());
                         assertEquals(professor.getGender(), professorDTO1.gender());
                     }, Assertions::fail);
-            dtoPage.getContent().stream()
+            dtoPage.professorDTOList().stream()
                     .filter(professorDTO1 -> professorDTO1.id().equals(professor1.getId()))
                     .findFirst()
                     .ifPresentOrElse(professorDTO1 -> {
@@ -209,7 +210,7 @@ public class ProfessorServiceTests {
                         assertEquals(professor1.getGender(), professorDTO1.gender());
                     }, Assertions::fail);
 
-            assertThat(dtoPage.getContent()).containsExactlyInAnyOrder(professorDTO, dto);
+            assertThat(dtoPage.professorDTOList()).containsExactlyInAnyOrder(professorDTO, dto);
 
         }
     }
