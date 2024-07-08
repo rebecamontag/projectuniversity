@@ -14,6 +14,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -46,18 +47,34 @@ public class ProfessorControllerTests {
         professorDTO = ProfessorDTOStubs.createProfessorDTO();
     }
 
+    @Nested
+    class CreateTest {
 
-//    @Nested
-//    class FindByDocumentTests {
-//
-//        @Test
-//        public void shouldFindByDocumentWithSuccess() {
-//            when(professorService.findByDocument(professorDTO.document())).thenReturn(professorDTO);
-//            ResponseEntity<ProfessorDTO> expectedProfessorDTO = professorController.findByDocument(professorDTO.document());
-//            Assertions.assertThat(expectedProfessorDTO).isNotNull();
-//            Assertions.assertThat(expectedProfessorDTO.equals(professorDTO));
-//        }
-//    }
+        @Test
+        void shouldCreate() throws Exception {
+            when(professorService.create(professorDTO)).thenReturn(professorDTO);
+
+            String request = """
+                    {
+                            "id":1,
+                            "firstName":"Rebeca",
+                            "lastName":"M. Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE"
+                                
+                    }
+                    """;
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/professors")
+                    .content(request)
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isCreated())
+                    .andExpect(MockMvcResultMatchers.header().exists("Location"))
+                    .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/professors/1"));
+        }
+    }
 
     @Nested
     class FindByDocumentTest {
@@ -66,7 +83,7 @@ public class ProfessorControllerTests {
         void shouldFindByDocument() throws Exception {
             when(professorService.findByDocument(professorDTO.document())).thenReturn(professorDTO);
 
-            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/12345678900"))
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/document/12345678900"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andReturn()
                     .getResponse()
@@ -75,10 +92,73 @@ public class ProfessorControllerTests {
             assertNotNull(result);
             JSONAssert.assertEquals("""
                     {
-                            "id": 1,
+                            "id":1,
                             "firstName":"Rebeca",
                             "lastName":"M. Pusinhol",
-                            "birthDate":"2024-07-03",
+                            "birthDate":"2024-07-08",
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE"
+                                
+                    }
+                    """,
+                    result,
+                    JSONCompareMode.STRICT);
+        }
+    }
+
+    @Nested
+    class FindByIdTest {
+
+        @Test
+        void shouldFindById() throws Exception {
+            ProfessorDTO professorDTO2 = ProfessorDTOStubs.createProfessorDTO2();
+            when(professorService.findById(professorDTO2.id())).thenReturn(professorDTO2);
+
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/2"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertNotNull(result);
+            JSONAssert.assertEquals("""
+                    {
+                            "id":2,
+                            "firstName":"Matheus",
+                            "lastName":"Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"98765432100",
+                            "email":"teste2@gmail.com",
+                            "gender":"MALE"
+                                
+                    }
+                    """,
+                    result,
+                    JSONCompareMode.STRICT);
+        }
+    }
+
+    @Nested
+    class FindByNameTest {
+
+        @Test
+        void shouldFindByName() throws Exception {
+            when(professorService.findByName(professorDTO.firstName())).thenReturn(professorDTO);
+
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/name/Rebeca"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertNotNull(result);
+            JSONAssert.assertEquals("""
+                    {
+                            "id":1,
+                            "firstName":"Rebeca",
+                            "lastName":"M. Pusinhol",
+                            "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
                             "gender":"FEMALE"
@@ -110,7 +190,30 @@ public class ProfessorControllerTests {
 
             assertNotNull(result);
             JSONAssert.assertEquals("""
-                    {"totalPages":1,"itemsPerPage":2,"currentPage":0,"professorDTOList":[{"id":1,"firstName":"Rebeca","lastName":"M. Pusinhol","birthDate":"2024-07-03","document":"12345678900","email":"teste@gmail.com","gender":"FEMALE"},{"id":2,"firstName":"Matheus","lastName":"Pusinhol","birthDate":"2024-07-03","document":"98765432100","email":"teste2@gmail.com","gender":"MALE"}]}""", result, JSONCompareMode.STRICT);
+                  {
+                  "totalPages":1,
+                  "itemsPerPage":2,
+                  "currentPage":0,
+                  "professorDTOList":
+                        [
+                            {
+                                "id":1,
+                                "firstName":"Rebeca",
+                                "lastName":"M. Pusinhol",
+                                "birthDate":"2024-07-08",
+                                "document":"12345678900",
+                                "email":"teste@gmail.com",
+                                "gender":"FEMALE"
+                                },
+                            {
+                                "id":2,
+                                "firstName":"Matheus",
+                                "lastName":"Pusinhol",
+                                "birthDate":"2024-07-08",
+                                "document":"98765432100",
+                                "email":"teste2@gmail.com",
+                                "gender":"MALE"}]}""",
+                    result, JSONCompareMode.STRICT);
         }
     }
 

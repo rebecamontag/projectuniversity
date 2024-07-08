@@ -37,7 +37,7 @@ public class ProfessorController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping(value = "/{document}")
+    @GetMapping(value = "/document/{document}")
     public ResponseEntity<ProfessorDTO> findByDocument(@PathVariable String document) {
         ProfessorDTO professorDTO = professorService.findByDocument(document);
         return ResponseEntity.ok().body(professorDTO);
@@ -49,7 +49,7 @@ public class ProfessorController {
         return ResponseEntity.ok().body(professorDTO);
     }
 
-    @GetMapping(value = "/{name}")
+    @GetMapping(value = "/name/{name}")
     public ResponseEntity<ProfessorDTO> findByName(@PathVariable String name) {
         ProfessorDTO professorDTO = professorService.findByName(name);
         return ResponseEntity.ok().body(professorDTO);
