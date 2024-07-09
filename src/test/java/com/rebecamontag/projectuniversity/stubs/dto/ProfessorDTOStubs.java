@@ -13,7 +13,7 @@ public class ProfessorDTOStubs {
                 1,
                 "Rebeca",
                 "M. Pusinhol",
-                LocalDate.now(),
+                LocalDate.parse("2024-07-08"),
                 "12345678900",
                 "teste@gmail.com",
                 Gender.FEMALE
@@ -26,10 +26,20 @@ public class ProfessorDTOStubs {
                 2,
                 "Matheus",
                 "Pusinhol",
-                LocalDate.now(),
+                LocalDate.parse("2024-07-08"),
                 "98765432100",
                 "teste2@gmail.com",
                 Gender.MALE
         );
+    }
+
+    public static ProfessorDTO createProfessorDTO3() {
+        return new ProfessorDTO(1,
+                "Rebeca",
+                "M. Pusinhol",
+                LocalDate.parse("2024-07-08"),
+                "12345678900",
+                "teste@gmail.com",
+                Gender.FEMALE);
     }
 }

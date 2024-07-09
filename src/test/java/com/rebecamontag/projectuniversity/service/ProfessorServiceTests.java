@@ -158,23 +158,9 @@ public class ProfessorServiceTests {
 
         @Test
         public void shouldFindAllWithSuccess() {
-            ProfessorDTO dto = new ProfessorDTO(1,
-                    "Rebeca",
-                    "M. Pusinhol",
-                    LocalDate.now(),
-                    "12345678900",
-                    "teste@gmail.com",
-                    Gender.FEMALE);
+            ProfessorDTO dto = ProfessorDTOStubs.createProfessorDTO3();
 
-            Professor professor1 = Professor.builder()
-                    .id(1)
-                    .firstName("Rebeca")
-                    .lastName("M. Pusinhol")
-                    .birthDate(LocalDate.now())
-                    .document("12345678900")
-                    .email("teste@gmail.com")
-                    .gender(Gender.FEMALE)
-                    .build();
+            Professor professor1 = ProfessorStubs.createProfessor2();
 
             Page<Professor> professorPage = new PageImpl<>(List.of(professor, professor1));
 

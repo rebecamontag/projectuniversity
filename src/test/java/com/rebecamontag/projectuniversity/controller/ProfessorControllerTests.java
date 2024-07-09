@@ -218,7 +218,62 @@ public class ProfessorControllerTests {
     }
 
     @Nested
-    class DeleteTests {
+    class UpdateTests {
+
+        @Test
+        void shouldUpdate() throws Exception {
+            when(professorService.update(professorDTO.id(), professorDTO)).thenReturn(professorDTO);
+
+            String request = """
+                    {
+                            "id":1,
+                            "firstName":"Rebeca",
+                            "lastName":"M. Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE"
+                                
+                    }
+                    """;
+
+//            mockMvc.perform(MockMvcRequestBuilders.post("/professors")
+//                    .content(request)
+//                    .contentType(MediaType.APPLICATION_JSON))
+//                    .andExpect(MockMvcResultMatchers.status().isCreated())
+//                    .andExpect(MockMvcResultMatchers.header().exists("Location"))
+//                    .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/professors/1"));
+
+            String result = mockMvc.perform(MockMvcRequestBuilders.put("/professors/1")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertNotNull(result);
+            JSONAssert.assertEquals("""
+                    {
+                            "id":1,
+                            "firstName":"Rebeca",
+                            "lastName":"M. Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE"
+                                
+                    }
+                    """,
+                    result,
+                    JSONCompareMode.STRICT);
+
+        }
+
+    }
+
+    @Nested
+    class DeleteTest {
 
         @Test
         public void shouldDeleteWithSuccess() throws Exception {

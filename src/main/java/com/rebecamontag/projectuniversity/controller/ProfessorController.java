@@ -62,7 +62,7 @@ public class ProfessorController {
         return ResponseEntity.ok().body(professorDTO);
     }
 
-    @PutMapping
+    @PutMapping(value = "/{id}")
     public ResponseEntity<ProfessorDTO> update(@PathVariable Integer id, @RequestBody ProfessorDTO dto) {
         professorService.update(id, dto);
         return ResponseEntity.ok().body(dto);
