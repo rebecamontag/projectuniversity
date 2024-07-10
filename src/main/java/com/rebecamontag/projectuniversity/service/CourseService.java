@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CourseService {
@@ -37,6 +39,13 @@ public class CourseService {
     public CourseDTO findByName(String name) {
         return CourseMapper.toDTO(courseRepository.findByName(name)
         .orElseThrow(() -> new NotFoundException("It was not possible to find course " + name)));
+    }
+
+    public List<CourseDTO> findAllByProfessorId(Integer id) {
+        return courseRepository.findAllByProfessorId(id)
+                .stream()
+                .map(CourseMapper::toDTO)
+                .toList();
     }
 
     public CoursePageableResponse findAll(Integer page, Integer size) {
