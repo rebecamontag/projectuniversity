@@ -6,6 +6,7 @@ import com.rebecamontag.projectuniversity.model.dto.CourseDTO;
 import com.rebecamontag.projectuniversity.model.dto.CoursePageableResponse;
 import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.mapper.CourseMapper;
+import com.rebecamontag.projectuniversity.model.mapper.ProfessorMapper;
 import com.rebecamontag.projectuniversity.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,7 @@ public class CourseService {
     public CourseDTO create(CourseDTO courseDTO) {
         courseRepository.findByName(courseDTO.name())
                 .ifPresent(course -> {
-                    throw new DuplicateException("This course already exists".formatted(course.getName()));
+                    throw new DuplicateException("Course %s already exists".formatted(course.getName()));
                 });
 
         Course course = CourseMapper.toEntity(courseDTO);
@@ -61,8 +62,7 @@ public class CourseService {
 
     public CourseDTO update(Integer id, CourseDTO courseDTO) {
         Course updatedCourse = findByIdOrElseThrow(id);
-        updatedCourse.setProfessor(courseDTO.professor());
-        updatedCourse.setClassRoom(courseDTO.classRoom());
+        updatedCourse.setProfessor(ProfessorMapper.toEntity(courseDTO.professorDTO()));
         updatedCourse.setName(courseDTO.name());
         updatedCourse.setDescription(courseDTO.description());
 

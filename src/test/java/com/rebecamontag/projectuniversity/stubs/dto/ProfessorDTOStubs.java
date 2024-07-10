@@ -8,7 +8,6 @@ import java.time.LocalDate;
 public class ProfessorDTOStubs {
 
     public static ProfessorDTO createProfessorDTO() {
-
         return new ProfessorDTO(
                 1,
                 "Rebeca",
@@ -21,7 +20,6 @@ public class ProfessorDTOStubs {
     }
 
     public static ProfessorDTO createProfessorDTO2() {
-
         return new ProfessorDTO(
                 2,
                 "Matheus",
