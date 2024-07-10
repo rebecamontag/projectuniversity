@@ -3,6 +3,7 @@ package com.rebecamontag.projectuniversity.service;
 import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
+import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.mapper.ProfessorMapper;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
@@ -10,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class ProfessorService {
     public ProfessorDTO create(ProfessorDTO professorDTO) {
         professorRepository.findByDocument(professorDTO.document())
                 .ifPresent(professor -> {
-                    throw new DuplicateException("Document %s already exists".formatted(professor.document()));
+                    throw new DuplicateException("Document %s already exists".formatted(professor.getDocument()));
                 });
 
         Professor professor = ProfessorMapper.toEntity(professorDTO);
@@ -31,8 +30,8 @@ public class ProfessorService {
     }
 
     public ProfessorDTO findByDocument(String document) {
-        return professorRepository.findByDocument(document)
-                .orElseThrow(() -> new NotFoundException("Professor not found with document number " + document));
+        return ProfessorMapper.toDTO(professorRepository.findByDocument(document)
+                .orElseThrow(() -> new NotFoundException("Professor not found with document number " + document)));
     }
 
     public ProfessorDTO findById(Integer id) {
@@ -40,13 +39,19 @@ public class ProfessorService {
     }
 
     public ProfessorDTO findByName(String name) {
-        Optional<ProfessorDTO> professorDTO = professorRepository.findByName(name);
-        return professorDTO.orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name));
+        return ProfessorMapper.toDTO(professorRepository.findByName(name)
+                .orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name)));
     }
 
-    public Page<ProfessorDTO> findAll(Integer page, Integer size) {
-        return professorRepository.findAll(PageRequest.of(page, size))
+    public ProfessorPageableResponse findAll(Integer page, Integer size) {
+        Page<ProfessorDTO> professorDTOPage = professorRepository.findAll(PageRequest.of(page, size))
                 .map(ProfessorMapper::toDTO);
+
+        return new ProfessorPageableResponse(
+                professorDTOPage.getTotalPages(),
+                professorDTOPage.getNumberOfElements(),
+                professorDTOPage.getNumber(),
+                professorDTOPage.getContent());
     }
 
     public ProfessorDTO update(Integer id, ProfessorDTO professorDTO) {
