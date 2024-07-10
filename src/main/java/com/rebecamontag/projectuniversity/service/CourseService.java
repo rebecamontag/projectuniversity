@@ -3,10 +3,13 @@ package com.rebecamontag.projectuniversity.service;
 import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.CourseDTO;
+import com.rebecamontag.projectuniversity.model.dto.CoursePageableResponse;
 import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.mapper.CourseMapper;
 import com.rebecamontag.projectuniversity.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,9 +30,44 @@ public class CourseService {
         return CourseMapper.toDTO(courseRepository.save(course));
     }
 
+    public CourseDTO findById(Integer id) {
+        return CourseMapper.toDTO(findByIdOrElseThrow(id));
+    }
+
     public CourseDTO findByName(String name) {
         return CourseMapper.toDTO(courseRepository.findByName(name)
         .orElseThrow(() -> new NotFoundException("It was not possible to find course " + name)));
+    }
+
+    public CoursePageableResponse findAll(Integer page, Integer size) {
+        Page<CourseDTO> courseDTOPage = courseRepository.findAll(PageRequest.of(page, size))
+                .map(CourseMapper::toDTO);
+
+        return new CoursePageableResponse(
+                courseDTOPage.getTotalPages(),
+                courseDTOPage.getNumberOfElements(),
+                courseDTOPage.getNumber(),
+                courseDTOPage.getContent());
+    }
+
+    public CourseDTO update(Integer id, CourseDTO courseDTO) {
+        Course updatedCourse = findByIdOrElseThrow(id);
+        updatedCourse.setProfessor(courseDTO.professor());
+        updatedCourse.setClassRoom(courseDTO.classRoom());
+        updatedCourse.setName(courseDTO.name());
+        updatedCourse.setDescription(courseDTO.description());
+
+        return CourseMapper.toDTO(courseRepository.save(updatedCourse));
+    }
+
+    public void deleteById(Integer id) {
+        findByIdOrElseThrow(id);
+        courseRepository.deleteById(id);
+    }
+
+    private Course findByIdOrElseThrow(Integer id) {
+        return courseRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Course not found with id " + id));
     }
 
 }
