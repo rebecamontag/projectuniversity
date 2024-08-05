@@ -132,23 +132,23 @@ public class ProfessorServiceTests {
     class FindByNameTests {
 
         @Test
-        public void shouldFindByNameWithSuccess() {
-            when(professorRepository.findByName(professorDTO.firstName())).thenReturn(Optional.of(professor));
+        public void shouldFindByFirstNameWithSuccess() {
+            when(professorRepository.findByFirstName(professorDTO.firstName())).thenReturn(Optional.of(professor));
 
-            ProfessorDTO expectedProfessor = professorService.findByName(professorDTO.firstName());
+            ProfessorDTO expectedProfessor = professorService.findByFirstName(professorDTO.firstName());
 
             assertEquals(professorDTO, expectedProfessor);
-            verify(professorRepository, times(1)).findByName(professorDTO.firstName());
+            verify(professorRepository, times(1)).findByFirstName(professorDTO.firstName());
             verifyNoMoreInteractions(professorRepository);
         }
 
         @Test
         public void shouldThrowExceptionWhenNotValidName() {
-            when(professorRepository.findByName(professorDTO.firstName())).thenReturn(Optional.empty());
+            when(professorRepository.findByFirstName(professorDTO.firstName())).thenReturn(Optional.empty());
 
             assertThrows(
                     NotFoundException.class,
-                    () -> professorService.findByName(professorDTO.firstName()),
+                    () -> professorService.findByFirstName(professorDTO.firstName()),
                     "It was not possible to find professor called ".concat(professorDTO.firstName()));
         }
     }

@@ -33,4 +33,16 @@ public class ProfessorStubs {
                 .gender(Gender.FEMALE)
                 .build();
     }
+
+    public static Professor createProfessor3() {
+        return Professor.builder()
+                .id(2)
+                .firstName("Matheus")
+                .lastName("Pusinhol")
+                .birthDate(LocalDate.parse("2024-07-08"))
+                .document("98765432100")
+                .email("teste2@gmail.com")
+                .gender(Gender.MALE)
+                .build();
+    }
 }

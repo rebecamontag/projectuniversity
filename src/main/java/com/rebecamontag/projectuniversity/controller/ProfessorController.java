@@ -50,8 +50,8 @@ public class ProfessorController {
     }
 
     @GetMapping(value = "/name/{name}")
-    public ResponseEntity<ProfessorDTO> findByName(@PathVariable String name) {
-        ProfessorDTO professorDTO = professorService.findByName(name);
+    public ResponseEntity<ProfessorDTO> findByFirstName(@PathVariable String name) {
+        ProfessorDTO professorDTO = professorService.findByFirstName(name);
         return ResponseEntity.ok().body(professorDTO);
     }
 

@@ -143,8 +143,8 @@ public class ProfessorControllerTests {
     class FindByNameTest {
 
         @Test
-        void shouldFindByName() throws Exception {
-            when(professorService.findByName(professorDTO.firstName())).thenReturn(professorDTO);
+        void shouldFindByFirstName() throws Exception {
+            when(professorService.findByFirstName(professorDTO.firstName())).thenReturn(professorDTO);
 
             String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/name/Rebeca"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
