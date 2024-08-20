@@ -16,11 +16,82 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ProfessorIT extends BaseIT {
 
     @Nested
-    class FindByIdTest {
+    class CreateTest {
+
+        @AfterEach
+        void cleanUpDatabase() {
+            professorRepository.deleteAll();
+        }
+
+        @Test
+        void shouldCreate() throws Exception {
+            String request = """
+                    {
+                            "id":1,
+                            "firstName":"Matheus",
+                            "lastName":"Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"98765432100",
+                            "email":"teste2@gmail.com",
+                            "gender":"MALE"
+                                
+                    }
+                    """;
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/professors")
+                    .content(request)
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isCreated())
+                    .andExpect(MockMvcResultMatchers.header().exists("Location"))
+                    .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/professors/1"));
+        }
+    }
+
+    @Nested
+    class FindByDocumentTest {
 
         @BeforeEach
         void setUpDatabase() {
             professorRepository.save(ProfessorStubs.createProfessor3());
+        }
+
+        @AfterEach
+        void cleanUpDatabase() {
+            professorRepository.deleteAll();
+        }
+
+        @Test
+        void shouldFindByDocument() throws Exception {
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/document/98765432100"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertNotNull(result);
+            JSONAssert.assertEquals("""
+                    {
+                            "id":1,
+                            "firstName":"Matheus",
+                            "lastName":"Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"98765432100",
+                            "email":"teste2@gmail.com",
+                            "gender":"MALE"
+                                
+                    }
+                    """,
+                    result,
+                    JSONCompareMode.STRICT);
+        }
+    }
+
+    @Nested
+    class FindByIdTest {
+
+        @BeforeEach
+        void setUpDatabase() {
+            professorRepository.save(ProfessorStubs.createProfessor());
         }
 
         @AfterEach
@@ -40,12 +111,12 @@ public class ProfessorIT extends BaseIT {
             JSONAssert.assertEquals("""
                     {
                             "id":1,
-                            "firstName":"Matheus",
-                            "lastName":"Pusinhol",
+                            "firstName":"Rebeca",
+                            "lastName":"M. Pusinhol",
                             "birthDate":"2024-07-08",
-                            "document":"98765432100",
-                            "email":"teste2@gmail.com",
-                            "gender":"MALE"
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE"
                                 
                     }
                     """,
@@ -70,45 +141,6 @@ public class ProfessorIT extends BaseIT {
         @Test
         void shouldFindByFirstName() throws Exception {
             String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/name/Matheus"))
-                    .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andReturn()
-                    .getResponse()
-                    .getContentAsString();
-
-            assertNotNull(result);
-            JSONAssert.assertEquals("""
-                    {
-                            "id":1,
-                            "firstName":"Matheus",
-                            "lastName":"Pusinhol",
-                            "birthDate":"2024-07-08",
-                            "document":"98765432100",
-                            "email":"teste2@gmail.com",
-                            "gender":"MALE"
-                                
-                    }
-                    """,
-                    result,
-                    JSONCompareMode.STRICT);
-        }
-    }
-
-    @Nested
-    class FindByDocumentTest {
-
-        @BeforeEach
-        void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor3());
-        }
-
-        @AfterEach
-        void cleanUpDatabase() {
-            professorRepository.deleteAll();
-        }
-
-        @Test
-        void shouldFindByDocument() throws Exception {
-            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/document/98765432100"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andReturn()
                     .getResponse()
@@ -186,9 +218,13 @@ public class ProfessorIT extends BaseIT {
 //        }
 //    }
 
-
     @Nested
-    class CreateTest {
+    class UpdateTest {
+
+        @BeforeEach
+        void setUpDatabase() {
+            professorRepository.save(ProfessorStubs.createProfessor());
+        }
 
         @AfterEach
         void cleanUpDatabase() {
@@ -196,26 +232,59 @@ public class ProfessorIT extends BaseIT {
         }
 
         @Test
-        void shouldCreate() throws Exception {
+        void shouldUpdate() throws Exception {
             String request = """
                     {
                             "id":1,
-                            "firstName":"Matheus",
+                            "firstName":"Rebeca",
                             "lastName":"Pusinhol",
                             "birthDate":"2024-07-08",
-                            "document":"98765432100",
-                            "email":"teste2@gmail.com",
-                            "gender":"MALE"
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE"
                                 
                     }
                     """;
 
-            mockMvc.perform(MockMvcRequestBuilders.post("/professors")
+            String result = mockMvc.perform(MockMvcRequestBuilders.put("/professors/1")
                     .content(request)
                     .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.status().isCreated())
-                    .andExpect(MockMvcResultMatchers.header().exists("Location"))
-                    .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/professors/1"));
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertNotNull(result);
+            JSONAssert.assertEquals("""
+                    {
+                            "id":1,
+                            "firstName":"Rebeca",
+                            "lastName":"Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE"
+                                
+                    }
+                    """,
+                    result,
+                    JSONCompareMode.STRICT);
+        }
+    }
+
+    @Nested
+    class DeleteTest {
+
+        @BeforeEach
+        void setUpDatabase() {
+            professorRepository.save(ProfessorStubs.createProfessor());
+        }
+
+        @Test
+        void shouldDelete() throws Exception {
+            mockMvc.perform(MockMvcRequestBuilders.delete("/professors/1"))
+                    .andExpect(MockMvcResultMatchers.status().isNoContent());
+
         }
     }
 }

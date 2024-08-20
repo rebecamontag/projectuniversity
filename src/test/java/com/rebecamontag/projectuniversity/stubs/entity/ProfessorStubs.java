@@ -5,7 +5,6 @@ import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ProfessorStubs {
