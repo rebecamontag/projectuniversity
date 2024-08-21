@@ -1,5 +1,8 @@
 package com.rebecamontag.projectuniversity;
 
+import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
+import com.rebecamontag.projectuniversity.model.entity.Professor;
+import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +13,8 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -164,59 +169,63 @@ public class ProfessorIT extends BaseIT {
         }
     }
 
-//    @Nested
-//    class FindAllTest {
-//
-//        @BeforeEach
-//        void setUpDatabase() {
-//            professorRepository.saveAll(ProfessorStubs.createProfessor4());
-//        }
-//
-//        @AfterEach
-//        void cleanUpDatabase() {
-//            professorRepository.deleteAll();
-//        }
-//
-//        @Test
-//        void shouldFindAll() throws Exception {
-//            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors?page=0&size=10"))
-//                    .andExpect(MockMvcResultMatchers.status().isOk())
-//                    .andReturn()
-//                    .getResponse()
-//                    .getContentAsString();
-//
-//            assertNotNull(result);
-//            JSONAssert.assertEquals("""
-//                    {
-//                  "totalPages":1,
-//                  "itemsPerPage":2,
-//                  "currentPage":0,
-//                  "professorDTOList":
-//                  [
-//                        {
-//                            "id":1,
-//                            "firstName":"Matheus",
-//                            "lastName":"Pusinhol",
-//                            "birthDate":"2024-07-08",
-//                            "document":"98765432100",
-//                            "email":"teste2@gmail.com",
-//                            "gender":"MALE"
-//                            },
-//                        {
-//                            "id":2,
-//                            "firstName":"Rebeca",
-//                            "lastName":"M. Pusinhol",
-//                            "birthDate":"2024-07-08",
-//                            "document":"12345678900",
-//                            "email":"teste@gmail.com",
-//                            "gender":"FEMALE"
-//                    }
-//                    ]}
-//                    """,
-//                    result,
-//                    JSONCompareMode.STRICT);
-//        }
-//    }
+    @Nested
+    class FindAllTest {
+
+        @BeforeEach
+        void setUpDatabase() {
+            Professor professor1 = ProfessorStubs.createProfessor3();
+            professor1.setId(null);
+            Professor professor2 = ProfessorStubs.createProfessor2();
+            professor2.setId(null);
+            professorRepository.saveAll(List.of(professor1, professor2));
+        }
+
+        @AfterEach
+        void cleanUpDatabase() {
+            professorRepository.deleteAll();
+        }
+
+        @Test
+        void shouldFindAll() throws Exception {
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors?page=0&size=10"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertNotNull(result);
+            JSONAssert.assertEquals("""
+                  {
+                  "totalPages":1,
+                  "itemsPerPage":2,
+                  "currentPage":0,
+                  "professorDTOList":
+                        [
+                            {
+                            "id":1,
+                            "firstName":"Matheus",
+                            "lastName":"Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"98765432100",
+                            "email":"teste2@gmail.com",
+                            "gender":"MALE"
+                            },
+                        {
+                            "id":2,
+                            "firstName":"Rebeca",
+                            "lastName":"M. Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE"
+                    }
+                    ]}
+                    """,
+                    result,
+                    JSONCompareMode.STRICT);
+        }
+    }
 
     @Nested
     class UpdateTest {
