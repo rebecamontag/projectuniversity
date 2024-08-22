@@ -38,8 +38,8 @@ public class ProfessorService {
          return ProfessorMapper.toDTO(findByIdOrElseThrow(id));
     }
 
-    public ProfessorDTO findByName(String name) {
-        return ProfessorMapper.toDTO(professorRepository.findByName(name)
+    public ProfessorDTO findByFirstName(String name) {
+        return ProfessorMapper.toDTO(professorRepository.findByFirstName(name)
                 .orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name)));
     }
 

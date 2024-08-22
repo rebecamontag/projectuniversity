@@ -23,18 +23,54 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'com.h2database:h2:2.2.224'
-
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	implementation 'com.h2database:h2:2.2.224'
+	implementation 'org.postgresql:postgresql:42.1.4'
+	//implementation 'org.hibernate:hibernate-core:4.1.4.Final'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
 }
+
+dependencyManagement {
+	imports {
+		mavenBom "org.testcontainers:testcontainers-bom:1.19.8"
+	}
+}
+
+sourceSets {
+	unitTest {
+		java.srcDir("src/test/java")
+		resources.srcDir("src/test/resources")
+	}
+	integrationTest {
+		java.srcDir("src/integration-test/java")
+		resources.srcDir("src/integration-test/resources")
+		compileClasspath += main.output + test.output
+		runtimeClasspath += main.output + test.output
+	}
+}
+
+configurations {
+	integrationTestImplementation.extendsFrom testImplementation
+	integrationTestRuntime.extendsFrom testRuntime
+}
+
+tasks.register('integrationTest', Test) {
+	useJUnitPlatform()
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+check.dependsOn integrationTest
 
 tasks.named('test') {
 	useJUnitPlatform()
