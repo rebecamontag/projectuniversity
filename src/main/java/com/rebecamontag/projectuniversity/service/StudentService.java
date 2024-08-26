@@ -2,15 +2,10 @@ package com.rebecamontag.projectuniversity.service;
 
 import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
-import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
-import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.model.dto.StudentDTO;
 import com.rebecamontag.projectuniversity.model.dto.StudentPageableResponse;
-import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.entity.Student;
-import com.rebecamontag.projectuniversity.model.mapper.ProfessorMapper;
 import com.rebecamontag.projectuniversity.model.mapper.StudentMapper;
-import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
