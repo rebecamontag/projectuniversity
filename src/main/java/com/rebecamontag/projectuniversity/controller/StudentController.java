@@ -22,7 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "professors")
+@RequestMapping(value = "students")
 @RequiredArgsConstructor
 public class StudentController {
 
