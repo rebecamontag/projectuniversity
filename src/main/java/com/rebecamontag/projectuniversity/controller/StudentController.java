@@ -1,10 +1,7 @@
 package com.rebecamontag.projectuniversity.controller;
 
-import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
-import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.model.dto.StudentDTO;
 import com.rebecamontag.projectuniversity.model.dto.StudentPageableResponse;
-import com.rebecamontag.projectuniversity.service.ProfessorService;
 import com.rebecamontag.projectuniversity.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
