@@ -11,7 +11,7 @@ public class ClassRoomStubs {
         return ClassRoom.builder()
                 .id(1)
                 .roomNumber(10)
-                .course(Course.builder().build())
+                .course(null)
                 .name("Math Classroom")
                 .build();
     }
@@ -28,7 +28,7 @@ public class ClassRoomStubs {
         return ClassRoom.builder()
                 .id(2)
                 .roomNumber(20)
-                .name("Chemestry Classroom")
+                .name("Chemistry Classroom")
                 .build();
     }
 }
