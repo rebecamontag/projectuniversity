@@ -2,18 +2,12 @@ package com.rebecamontag.projectuniversity.service;
 
 import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
-import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
-import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.model.dto.StudentDTO;
 import com.rebecamontag.projectuniversity.model.dto.StudentPageableResponse;
-import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.entity.Student;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
-import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.repository.StudentRepository;
-import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
 import com.rebecamontag.projectuniversity.stubs.dto.StudentDTOStubs;
-import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.StudentStubs;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,6 +108,13 @@ public class StudentServiceTests {
 
         @Test
         public void shouldFindByIdWithSuccess() {
+            when(studentRepository.findById(studentDTO.id())).thenReturn(Optional.of(student));
+
+            StudentDTO expectedStudent = studentService.findById(studentDTO.id());
+
+            assertEquals(studentDTO, expectedStudent);
+            verify(studentRepository, times(1)).findById(studentDTO.id());
+            verifyNoMoreInteractions(studentRepository);
         }
 
         @Test
