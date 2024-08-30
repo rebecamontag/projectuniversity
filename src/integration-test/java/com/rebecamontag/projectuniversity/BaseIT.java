@@ -2,6 +2,7 @@ package com.rebecamontag.projectuniversity;
 
 import com.rebecamontag.projectuniversity.configuration.PostgresContainerConfiguration;
 import com.rebecamontag.projectuniversity.repository.ClassRoomRepository;
+import com.rebecamontag.projectuniversity.repository.CourseRepository;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class BaseIT {
 
     @Autowired
     protected ClassRoomRepository classRoomRepository;
+
+    @Autowired
+    protected CourseRepository courseRepository;
 
     @Autowired
     protected MockMvc mockMvc;

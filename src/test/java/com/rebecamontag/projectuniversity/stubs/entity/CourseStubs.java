@@ -3,17 +3,18 @@ package com.rebecamontag.projectuniversity.stubs.entity;
 import com.rebecamontag.projectuniversity.model.entity.Course;
 
 import java.util.Collections;
+import java.util.List;
 
 public class CourseStubs {
 
     public static Course createCourse() {
         return Course.builder()
                 .id(1)
-                .professor(ProfessorStubs.createProfessor())
-                .classRoom(ClassRoomStubs.createClassRoom())
+                .professor(null)
+                .classRoom(null)
                 .name("Math")
                 .description("Math lessons")
-                .students(Collections.singletonList(StudentStubs.createStudent()))
+                .students(List.of())
                 .build();
     }
 
