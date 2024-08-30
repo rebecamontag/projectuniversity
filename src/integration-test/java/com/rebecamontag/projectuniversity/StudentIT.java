@@ -1,7 +1,7 @@
 package com.rebecamontag.projectuniversity;
 
-import com.rebecamontag.projectuniversity.model.entity.Professor;
-import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
+import com.rebecamontag.projectuniversity.model.entity.Student;
+import com.rebecamontag.projectuniversity.stubs.entity.StudentStubs;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -16,14 +16,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ProfessorIT extends BaseIT {
+public class StudentIT extends BaseIT {
 
     @Nested
     class CreateTest {
 
         @AfterEach
         void cleanUpDatabase() {
-            professorRepository.deleteAll();
+            studentRepository.deleteAll();
         }
 
         @Test
@@ -41,12 +41,12 @@ public class ProfessorIT extends BaseIT {
                     }
                     """;
 
-            mockMvc.perform(MockMvcRequestBuilders.post("/professors")
+            mockMvc.perform(MockMvcRequestBuilders.post("/students")
                     .content(request)
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isCreated())
                     .andExpect(MockMvcResultMatchers.header().exists("Location"))
-                    .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/professors/1"));
+                    .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/students/1"));
         }
     }
 
@@ -55,17 +55,17 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor3());
+            studentRepository.save(StudentStubs.createStudent3());
         }
 
         @AfterEach
         void cleanUpDatabase() {
-            professorRepository.deleteAll();
+            studentRepository.deleteAll();
         }
 
         @Test
         void shouldFindByDocument() throws Exception {
-            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/document/98765432100"))
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/students/document/98765432100"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andReturn()
                     .getResponse()
@@ -94,17 +94,17 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor());
+            studentRepository.save(StudentStubs.createStudent());
         }
 
         @AfterEach
         void cleanUpDatabase() {
-            professorRepository.deleteAll();
+            studentRepository.deleteAll();
         }
 
         @Test
         void shouldFindById() throws Exception {
-            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/1"))
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/students/1"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andReturn()
                     .getResponse()
@@ -133,17 +133,17 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor3());
+            studentRepository.save(StudentStubs.createStudent3());
         }
 
         @AfterEach
         void cleanUpDatabase() {
-            professorRepository.deleteAll();
+            studentRepository.deleteAll();
         }
 
         @Test
         void shouldFindByFirstName() throws Exception {
-            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/name/Matheus"))
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/students/name/Matheus"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andReturn()
                     .getResponse()
@@ -172,21 +172,21 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            Professor professor1 = ProfessorStubs.createProfessor3();
-            professor1.setId(null);
-            Professor professor2 = ProfessorStubs.createProfessor2();
-            professor2.setId(null);
-            professorRepository.saveAll(List.of(professor1, professor2));
+            Student student1 = StudentStubs.createStudent3();
+            student1.setId(null);
+            Student student2 = StudentStubs.createStudent2();
+            student2.setId(null);
+            studentRepository.saveAll(List.of(student1, student2));
         }
 
         @AfterEach
         void cleanUpDatabase() {
-            professorRepository.deleteAll();
+            studentRepository.deleteAll();
         }
 
         @Test
         void shouldFindAll() throws Exception {
-            String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors?page=0&size=10"))
+            String result = mockMvc.perform(MockMvcRequestBuilders.get("/students?page=0&size=10"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andReturn()
                     .getResponse()
@@ -198,7 +198,7 @@ public class ProfessorIT extends BaseIT {
                   "totalPages":1,
                   "itemsPerPage":2,
                   "currentPage":0,
-                  "professorDTOList":
+                  "studentDTOList":
                         [
                             {
                             "id":1,
@@ -230,12 +230,12 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor());
+            studentRepository.save(StudentStubs.createStudent());
         }
 
         @AfterEach
         void cleanUpDatabase() {
-            professorRepository.deleteAll();
+            studentRepository.deleteAll();
         }
 
         @Test
@@ -253,7 +253,7 @@ public class ProfessorIT extends BaseIT {
                     }
                     """;
 
-            String result = mockMvc.perform(MockMvcRequestBuilders.put("/professors/1")
+            String result = mockMvc.perform(MockMvcRequestBuilders.put("/students/1")
                     .content(request)
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk())
@@ -284,12 +284,12 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor());
+            studentRepository.save(StudentStubs.createStudent());
         }
 
         @Test
         void shouldDelete() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.delete("/professors/1"))
+            mockMvc.perform(MockMvcRequestBuilders.delete("/students/1"))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
 
         }
