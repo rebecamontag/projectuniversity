@@ -36,7 +36,7 @@ public class CourseService {
 
     public CourseDTO findByName(String name) {
         return CourseMapper.toDTO(courseRepository.findByName(name)
-                .orElseThrow(() -> new NotFoundException("It was not possible to find professor called " + name)));
+                .orElseThrow(() -> new NotFoundException("It was not possible to find course called " + name)));
     }
 
     public CourseDTO findById(Integer id) {
