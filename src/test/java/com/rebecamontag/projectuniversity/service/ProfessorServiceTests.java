@@ -4,10 +4,12 @@ import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
+import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
+import com.rebecamontag.projectuniversity.stubs.entity.CourseStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,6 +46,9 @@ public class ProfessorServiceTests {
     @Mock
     ProfessorRepository professorRepository;
 
+    @Mock
+    CourseService courseService;
+
     @InjectMocks
     ProfessorService professorService;
 
@@ -48,11 +56,17 @@ public class ProfessorServiceTests {
 
     ProfessorDTO professorDTO;
 
+    Course course1;
+
+    Course course3;
+
 
     @BeforeEach
     public void setUp() {
         professor = ProfessorStubs.createProfessor();
         professorDTO = ProfessorDTOStubs.createProfessorDTO();
+        course1 = CourseStubs.createCourse();
+        course3 = CourseStubs.createCourse3();
     }
 
     @Nested
@@ -212,10 +226,11 @@ public class ProfessorServiceTests {
             ProfessorDTO dto = new ProfessorDTO(1,
                     "Rebeca",
                     "M. Pusinhol",
-                    LocalDate.now(),
+                    LocalDate.parse("2024-07-08"),
                     "12345678900",
                     "teste2@gmail.com",
-                    Gender.FEMALE);
+                    Gender.FEMALE,
+                    List.of(CourseStubs.createCourse()));
 
             ProfessorDTO professorDTO = professorService.update(dto.id(), dto);
 
@@ -226,6 +241,7 @@ public class ProfessorServiceTests {
             assertEquals(dto.document(), professorDTO.document());
             assertEquals(dto.email(), professorDTO.email());
             assertEquals(dto.gender(), professorDTO.gender());
+            assertEquals(dto.courses().get(0), professorDTO.courses().get(0));
 
             verify(professorRepository, times(1)).save(professor);
         }
@@ -262,6 +278,51 @@ public class ProfessorServiceTests {
                     NotFoundException.class,
                     () -> professorService.deleteById(professorDTO.id()),
                     "Professor not found with id ".concat(professorDTO.id().toString()));
+        }
+    }
+
+    @Nested
+    class addCourseToProfessorTests {
+
+        @Test
+        public void shouldAddCourseToProfessorWithSuccess() {
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.of(professor));
+            when(courseService.findByIdOrElseThrow(1)).thenReturn(course1);
+            when(courseService.findByIdOrElseThrow(2)).thenReturn(course3);
+            List<Integer> courseIds = Arrays.asList(1, 2);
+
+            ProfessorDTO result = professorService.addCourseToProfessor(1, courseIds);
+
+            assertNotNull(result);
+            assertEquals(2, result.courses().size());
+            assertTrue(result.courses().contains(course1));
+            assertTrue(result.courses().contains(course3));
+            verify(professorRepository).findById(1);
+            verify(courseService, times(2)).findByIdOrElseThrow(anyInt());
+        }
+
+        @Test
+        public void shouldAddCourseToProfessorWhenProfessorNotFound() {
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.empty());
+
+            assertThrows(
+                    NotFoundException.class,
+                    () -> professorService.addCourseToProfessor(1, Arrays.asList(1, 2)),
+                    "Professor not found with id ".concat(professorDTO.id().toString()));
+        }
+
+        @Test
+        public void shouldAddCourseToProfessorWhenCourseNotFound() {
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.of(professor));
+            when(courseService.findByIdOrElseThrow(1)).thenReturn(course1);
+            when(courseService.findByIdOrElseThrow(2)).thenThrow(new NotFoundException("Course not found with id " + 2));
+
+            List<Integer> courseIds = Arrays.asList(1, 2);
+
+            assertThrows(
+                    NotFoundException.class,
+                    () -> professorService.addCourseToProfessor(1, courseIds),
+                    "Course not found with id ".concat(course3.getId().toString()));
         }
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "professors")
@@ -74,4 +75,17 @@ public class ProfessorController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping(value = "/professors/{professorId}/courses")
+    public ResponseEntity<ProfessorDTO> addCourseToProfessor(@PathVariable Integer professorId,
+                                                     @RequestBody List<Integer> courseIds) {
+        ProfessorDTO professorDTO = professorService.addCourseToProfessor(professorId, courseIds);
+        return ResponseEntity.ok().body(professorDTO);
+    }
+
+    @DeleteMapping(value = "/professors/{professorId}/courses/{courseId}")
+    public ResponseEntity<Void> deleteCourseFromProfessor(@PathVariable Integer professorId,
+                                                          @PathVariable Integer courseId) {
+        professorService.deleteCourseFromProfessor(professorId, courseId);
+        return ResponseEntity.noContent().build();
+    }
 }

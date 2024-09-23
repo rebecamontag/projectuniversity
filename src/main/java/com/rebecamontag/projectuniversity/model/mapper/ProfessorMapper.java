@@ -14,6 +14,7 @@ public class ProfessorMapper {
                 .email(professorDTO.email())
                 .birthDate(professorDTO.birthDate())
                 .gender(professorDTO.gender())
+                .courses(professorDTO.courses())
                 .build();
     }
 
@@ -25,6 +26,7 @@ public class ProfessorMapper {
                 professor.getBirthDate(),
                 professor.getDocument(),
                 professor.getEmail(),
-                professor.getGender());
+                professor.getGender(),
+                professor.getCourses());
     }
 }

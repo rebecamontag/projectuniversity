@@ -18,7 +18,7 @@ public class ProfessorStubs {
                 .document("12345678900")
                 .email("teste@gmail.com")
                 .gender(Gender.FEMALE)
-                .courses(List.of())
+                .courses(List.of(CourseStubs.createCourse()))
                 .build();
     }
 
@@ -31,6 +31,7 @@ public class ProfessorStubs {
                 .document("12345678900")
                 .email("teste@gmail.com")
                 .gender(Gender.FEMALE)
+                .courses(List.of(CourseStubs.createCourse3()))
                 .build();
     }
 

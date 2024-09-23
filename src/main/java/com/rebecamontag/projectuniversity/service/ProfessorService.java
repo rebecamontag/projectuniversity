@@ -4,6 +4,7 @@ import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
+import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.mapper.ProfessorMapper;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
@@ -12,11 +13,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ProfessorService {
 
     private final ProfessorRepository professorRepository;
+    private final CourseService courseService;
 
     public ProfessorDTO create(ProfessorDTO professorDTO) {
         professorRepository.findByDocument(professorDTO.document())
@@ -73,5 +78,24 @@ public class ProfessorService {
     private Professor findByIdOrElseThrow(Integer id) {
         return professorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Professor not found with id " + id));
+    }
+
+    public ProfessorDTO addCourseToProfessor(Integer professorId, List<Integer> courseIds) {
+        Professor professor = findByIdOrElseThrow(professorId);
+        List<Course> courseList = courseIds.stream()
+                .map(courseService::findByIdOrElseThrow)
+                .collect(Collectors.toList());
+        professor.setCourses(courseList);
+        return ProfessorMapper.toDTO(professor);
+    }
+
+    public void deleteCourseFromProfessor(Integer professorId, Integer courseId) {
+        Professor professor = findByIdOrElseThrow(professorId);
+        Course courseToRemove = courseService.findByIdOrElseThrow(courseId);
+        List<Course> courseList = professor.getCourses();
+        List<Course> updatedList = courseList.stream()
+                .filter(c -> !c.getId().equals(courseToRemove.getId()))
+                .collect(Collectors.toList());
+        professor.setCourses(updatedList);
     }
 }

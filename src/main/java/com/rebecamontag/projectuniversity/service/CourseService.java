@@ -67,7 +67,7 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    private Course findByIdOrElseThrow(Integer id) {
+    public Course findByIdOrElseThrow(Integer id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Course not found with id " + id));
     }
