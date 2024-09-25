@@ -2,6 +2,10 @@ package com.rebecamontag.projectuniversity.model.mapper;
 
 import com.rebecamontag.projectuniversity.model.dto.CourseDTO;
 import com.rebecamontag.projectuniversity.model.entity.Course;
+import com.rebecamontag.projectuniversity.service.CourseService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CourseMapper {
 
@@ -18,5 +22,13 @@ public class CourseMapper {
                 course.getId(),
                 course.getName(),
                 course.getDescription());
+    }
+
+    public static List<Course> fromCourseDTOToEntity(List<CourseDTO> courseDTOList) {
+       return courseDTOList.stream().map(CourseMapper::toEntity).collect(Collectors.toList());
+    }
+
+    public static List<CourseDTO> fromCourseToDTO(List<Course> courseList) {
+        return courseList.stream().map(CourseMapper::toDTO).collect(Collectors.toList());
     }
 }

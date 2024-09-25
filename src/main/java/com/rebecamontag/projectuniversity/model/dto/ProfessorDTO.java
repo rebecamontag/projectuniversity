@@ -1,6 +1,5 @@
 package com.rebecamontag.projectuniversity.model.dto;
 
-import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 
 import java.time.LocalDate;
@@ -14,6 +13,6 @@ public record ProfessorDTO(
         String document,
         String email,
         Gender gender,
-        List<Course> courses
+        List<CourseDTO> courses
 ) {
 }

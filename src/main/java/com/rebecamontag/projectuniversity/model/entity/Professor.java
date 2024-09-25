@@ -1,6 +1,7 @@
 package com.rebecamontag.projectuniversity.model.entity;
 
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -48,7 +49,7 @@ public class Professor implements Serializable {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @OneToMany(mappedBy = "professor")
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Course> courses;
 

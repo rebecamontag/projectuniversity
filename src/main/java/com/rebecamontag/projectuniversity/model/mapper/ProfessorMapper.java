@@ -1,7 +1,10 @@
 package com.rebecamontag.projectuniversity.model.mapper;
 
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
+import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
+
+import java.util.List;
 
 public class ProfessorMapper {
 
@@ -14,7 +17,7 @@ public class ProfessorMapper {
                 .email(professorDTO.email())
                 .birthDate(professorDTO.birthDate())
                 .gender(professorDTO.gender())
-                .courses(professorDTO.courses())
+                .courses(CourseMapper.fromCourseDTOToEntity(professorDTO.courses()))
                 .build();
     }
 
@@ -27,6 +30,6 @@ public class ProfessorMapper {
                 professor.getDocument(),
                 professor.getEmail(),
                 professor.getGender(),
-                professor.getCourses());
+                CourseMapper.fromCourseToDTO(professor.getCourses()));
     }
 }

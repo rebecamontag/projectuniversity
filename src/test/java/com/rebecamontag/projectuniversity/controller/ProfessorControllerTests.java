@@ -1,10 +1,14 @@
 package com.rebecamontag.projectuniversity.controller;
 
+import com.rebecamontag.projectuniversity.model.dto.CourseDTO;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
+import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.service.ProfessorService;
+import com.rebecamontag.projectuniversity.stubs.dto.CourseDTOStubs;
 import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
+import com.rebecamontag.projectuniversity.stubs.entity.CourseStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -19,6 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -40,11 +46,17 @@ public class ProfessorControllerTests {
 
     ProfessorDTO professorDTO;
 
+    CourseDTO course1;
+
+    CourseDTO course3;
+
 
     @BeforeEach
     public void setUp() {
         professor = ProfessorStubs.createProfessor();
         professorDTO = ProfessorDTOStubs.createProfessorDTO();
+        course1 = CourseDTOStubs.createCourseDTO();
+        course3 = CourseDTOStubs.createCourseDTO2();
     }
 
     @Nested
@@ -283,6 +295,58 @@ public class ProfessorControllerTests {
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
 
             verify(professorService, times(1)).deleteById(professorDTO.id());
+        }
+    }
+
+    @Nested
+    class addCourseToProfessorTests {
+
+        @Test
+        public void shouldAddCourseToProfessorWithSuccess() throws Exception {
+            ProfessorDTO profDTO = ProfessorDTOStubs.createProfessorDTO4();
+            when(professorService.addCourseToProfessor(profDTO.id(), Arrays.asList(course1.id(), course3.id()))).thenReturn(profDTO);
+
+            String request = """
+                    
+                            [1,2]
+                    
+                    """;
+
+            String result = mockMvc.perform(MockMvcRequestBuilders.post("/professors/1/courses")
+                    .content(request)
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertNotNull(result);
+            JSONAssert.assertEquals("""
+                    {
+                            "id":1,
+                            "firstName":"Rebeca",
+                            "lastName":"M. Pusinhol",
+                            "birthDate":"2024-07-08",
+                            "document":"12345678900",
+                            "email":"teste@gmail.com",
+                            "gender":"FEMALE",
+                            "courses": [
+                                        {
+                                            "id":1,
+                                            "name":"Math",
+                                            "description":"Math lessons"
+                                        },
+                                        {
+                                            "id":2,
+                                            "name":"Chemistry",
+                                            "description":"Chemistry lessons"
+                                        }
+                                        ]
+                                
+                    }
+                    """,
+                    result,
+                    JSONCompareMode.STRICT);
         }
     }
 }

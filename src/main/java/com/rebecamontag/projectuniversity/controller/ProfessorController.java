@@ -75,14 +75,14 @@ public class ProfessorController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping(value = "/professors/{professorId}/courses")
+    @PostMapping(value = "/{professorId}/courses")
     public ResponseEntity<ProfessorDTO> addCourseToProfessor(@PathVariable Integer professorId,
-                                                     @RequestBody List<Integer> courseIds) {
+                                                             @RequestBody List<Integer> courseIds) {
         ProfessorDTO professorDTO = professorService.addCourseToProfessor(professorId, courseIds);
         return ResponseEntity.ok().body(professorDTO);
     }
 
-    @DeleteMapping(value = "/professors/{professorId}/courses/{courseId}")
+    @DeleteMapping(value = "/{professorId}/courses/{courseId}")
     public ResponseEntity<Void> deleteCourseFromProfessor(@PathVariable Integer professorId,
                                                           @PathVariable Integer courseId) {
         professorService.deleteCourseFromProfessor(professorId, courseId);

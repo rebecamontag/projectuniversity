@@ -5,6 +5,7 @@ import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 import com.rebecamontag.projectuniversity.stubs.entity.CourseStubs;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProfessorDTOStubs {
@@ -19,7 +20,7 @@ public class ProfessorDTOStubs {
                 "12345678900",
                 "teste@gmail.com",
                 Gender.FEMALE,
-                List.of(CourseStubs.createCourse())
+                List.of(CourseDTOStubs.createCourseDTO())
         );
     }
 
@@ -33,7 +34,7 @@ public class ProfessorDTOStubs {
                 "98765432100",
                 "teste2@gmail.com",
                 Gender.MALE,
-                List.of(CourseStubs.createCourse2())
+                List.of(CourseDTOStubs.createCourseDTO2())
         );
     }
 
@@ -45,6 +46,34 @@ public class ProfessorDTOStubs {
                 "12345678900",
                 "teste@gmail.com",
                 Gender.FEMALE,
-                List.of(CourseStubs.createCourse3()));
+                List.of(CourseDTOStubs.createCourseDTO3()));
+    }
+
+    public static ProfessorDTO createProfessorDTO4() {
+
+        return new ProfessorDTO(
+                1,
+                "Rebeca",
+                "M. Pusinhol",
+                LocalDate.parse("2024-07-08"),
+                "12345678900",
+                "teste@gmail.com",
+                Gender.FEMALE,
+                List.of(CourseDTOStubs.createCourseDTO(), CourseDTOStubs.createCourseDTO2())
+        );
+    }
+
+    public static ProfessorDTO createProfessorDTO5() {
+
+        return new ProfessorDTO(
+                1,
+                "Rebeca",
+                "M. Pusinhol",
+                LocalDate.parse("2024-07-08"),
+                "12345678900",
+                "teste@gmail.com",
+                Gender.FEMALE,
+                List.of()
+        );
     }
 }
