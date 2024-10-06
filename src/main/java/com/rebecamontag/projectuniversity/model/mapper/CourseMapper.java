@@ -2,7 +2,6 @@ package com.rebecamontag.projectuniversity.model.mapper;
 
 import com.rebecamontag.projectuniversity.model.dto.CourseDTO;
 import com.rebecamontag.projectuniversity.model.entity.Course;
-import com.rebecamontag.projectuniversity.service.CourseService;
 
 import java.util.List;
 import java.util.stream.Collectors;

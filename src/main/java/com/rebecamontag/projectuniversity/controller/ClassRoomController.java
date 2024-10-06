@@ -2,10 +2,7 @@ package com.rebecamontag.projectuniversity.controller;
 
 import com.rebecamontag.projectuniversity.model.dto.ClassRoomDTO;
 import com.rebecamontag.projectuniversity.model.dto.ClassRoomPageableResponse;
-import com.rebecamontag.projectuniversity.model.dto.StudentDTO;
-import com.rebecamontag.projectuniversity.model.dto.StudentPageableResponse;
 import com.rebecamontag.projectuniversity.service.ClassRoomService;
-import com.rebecamontag.projectuniversity.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

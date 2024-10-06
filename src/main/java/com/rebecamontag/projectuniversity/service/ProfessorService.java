@@ -6,7 +6,6 @@ import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
-import com.rebecamontag.projectuniversity.model.mapper.CourseMapper;
 import com.rebecamontag.projectuniversity.model.mapper.ProfessorMapper;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;

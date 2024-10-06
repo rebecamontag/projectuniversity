@@ -8,7 +8,6 @@ import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
 import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
-import com.rebecamontag.projectuniversity.model.mapper.CourseMapper;
 import com.rebecamontag.projectuniversity.repository.ProfessorRepository;
 import com.rebecamontag.projectuniversity.stubs.dto.CourseDTOStubs;
 import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
@@ -33,6 +32,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -170,53 +170,53 @@ public class ProfessorServiceTests {
         }
     }
 
-//    @Nested
-//    class FindAllTest {
-//
-//        @Test
-//        public void shouldFindAllWithSuccess() {
-//            ProfessorDTO dto = ProfessorDTOStubs.createProfessorDTO3();
-//
-//            Professor professor1 = ProfessorStubs.createProfessor2();
-//
-//            Page<Professor> professorPage = new PageImpl<>(List.of(professor, professor1));
-//
-//            when(professorRepository.findAll(PageRequest.of(1, 2))).thenReturn(professorPage);
-//
-//            ProfessorPageableResponse dtoPage = professorService.findAll(1, 2);
-//
-//            assertNotNull(dtoPage);
-//            assertEquals(1, dtoPage.totalPages());
-//            assertEquals(2, dtoPage.itemsPerPage());
-//            assertEquals(0, dtoPage.currentPage());
-//            assertEquals(2, dtoPage.professorDTOList().size());
-//            dtoPage.professorDTOList().stream()
-//                    .filter(professorDTO1 -> professorDTO1.id().equals(professor.getId()))
-//                    .findFirst()
-//                    .ifPresentOrElse(professorDTO1 -> {
-//                        assertEquals(professor.getFirstName(), professorDTO1.firstName());
-//                        assertEquals(professor.getLastName(), professorDTO1.lastName());
-//                        assertEquals(professor.getBirthDate(), professorDTO1.birthDate());
-//                        assertEquals(professor.getDocument(), professorDTO1.document());
-//                        assertEquals(professor.getEmail(), professorDTO1.email());
-//                        assertEquals(professor.getGender(), professorDTO1.gender());
-//                    }, Assertions::fail);
-//            dtoPage.professorDTOList().stream()
-//                    .filter(professorDTO1 -> professorDTO1.id().equals(professor1.getId()))
-//                    .findFirst()
-//                    .ifPresentOrElse(professorDTO1 -> {
-//                        assertEquals(professor1.getFirstName(), professorDTO1.firstName());
-//                        assertEquals(professor1.getLastName(), professorDTO1.lastName());
-//                        assertEquals(professor1.getBirthDate(), professorDTO1.birthDate());
-//                        assertEquals(professor1.getDocument(), professorDTO1.document());
-//                        assertEquals(professor1.getEmail(), professorDTO1.email());
-//                        assertEquals(professor1.getGender(), professorDTO1.gender());
-//                    }, Assertions::fail);
-//
-//            assertThat(dtoPage.professorDTOList()).containsExactlyInAnyOrder(professorDTO, dto);
-//
-//        }
-//    }
+    @Nested
+    class FindAllTest {
+
+        @Test
+        public void shouldFindAllWithSuccess() {
+            ProfessorDTO professorDTO2 = ProfessorDTOStubs.createProfessorDTO3();
+
+            Professor professor1 = ProfessorStubs.createProfessor();
+
+            Page<Professor> professorPage = new PageImpl<>(List.of(professor, professor1));
+
+            when(professorRepository.findAll(PageRequest.of(1, 2))).thenReturn(professorPage);
+
+            ProfessorPageableResponse dtoPage = professorService.findAll(1, 2);
+
+            assertNotNull(dtoPage);
+            assertEquals(1, dtoPage.totalPages());
+            assertEquals(2, dtoPage.itemsPerPage());
+            assertEquals(0, dtoPage.currentPage());
+            assertEquals(2, dtoPage.professorDTOList().size());
+            dtoPage.professorDTOList().stream()
+                    .filter(professorDTO1 -> professorDTO1.id().equals(professor.getId()))
+                    .findFirst()
+                    .ifPresentOrElse(professorDTO1 -> {
+                        assertEquals(professor.getFirstName(), professorDTO1.firstName());
+                        assertEquals(professor.getLastName(), professorDTO1.lastName());
+                        assertEquals(professor.getBirthDate(), professorDTO1.birthDate());
+                        assertEquals(professor.getDocument(), professorDTO1.document());
+                        assertEquals(professor.getEmail(), professorDTO1.email());
+                        assertEquals(professor.getGender(), professorDTO1.gender());
+                    }, Assertions::fail);
+            dtoPage.professorDTOList().stream()
+                    .filter(professorDTO1 -> professorDTO1.id().equals(professor1.getId()))
+                    .findFirst()
+                    .ifPresentOrElse(professorDTO1 -> {
+                        assertEquals(professor1.getFirstName(), professorDTO1.firstName());
+                        assertEquals(professor1.getLastName(), professorDTO1.lastName());
+                        assertEquals(professor1.getBirthDate(), professorDTO1.birthDate());
+                        assertEquals(professor1.getDocument(), professorDTO1.document());
+                        assertEquals(professor1.getEmail(), professorDTO1.email());
+                        assertEquals(professor1.getGender(), professorDTO1.gender());
+                    }, Assertions::fail);
+
+            assertThat(dtoPage.professorDTOList()).containsExactlyInAnyOrder(professorDTO, professorDTO2);
+
+        }
+    }
 
     @Nested
     class UpdateTests {
@@ -285,7 +285,7 @@ public class ProfessorServiceTests {
     }
 
     @Nested
-    class addCourseToProfessorTests {
+    class AddCourseToProfessorTests {
 
         @Test
         public void shouldAddCourseToProfessorWithSuccess() {
@@ -331,6 +331,46 @@ public class ProfessorServiceTests {
             assertThrows(
                     NotFoundException.class,
                     () -> professorService.addCourseToProfessor(1, courseIds),
+                    "Course not found with id ".concat(course3.getId().toString()));
+        }
+    }
+
+    @Nested
+    class DeleteCourseFromProfessor {
+
+        @Test
+        public void shouldDeleteCourseFromProfessorWithSuccess() {
+            ProfessorDTO dto = ProfessorDTOStubs.createProfessorDTO4();
+            Professor prof = ProfessorStubs.createProfessor5();
+
+            when(professorRepository.findById(dto.id())).thenReturn(Optional.of(prof));
+            when(courseService.findByIdOrElseThrow(course1.getId())).thenReturn(course1);
+
+            professorService.deleteCourseFromProfessor(1, course1.getId());
+
+            List<Course> coursesAfterDeletion = prof.getCourses();
+            assertEquals(1, coursesAfterDeletion.size());
+            assertFalse(coursesAfterDeletion.stream().anyMatch(c -> c.getId().equals(course1.getId())));
+        }
+
+        @Test
+        public void shouldDeleteCourseFromProfessorWhenProfessorNotFound() {
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.empty());
+
+            assertThrows(
+                    NotFoundException.class,
+                    () -> professorService.deleteCourseFromProfessor(1, course1.getId()),
+                    "Professor not found with id ".concat(professorDTO.id().toString()));
+        }
+
+        @Test
+        public void shouldDeleteCourseFromProfessorWhenCourseNotFound() {
+            when(professorRepository.findById(professorDTO.id())).thenReturn(Optional.of(professor));
+            when(courseService.findByIdOrElseThrow(course3.getId())).thenThrow(new NotFoundException("Course not found with id " + course3.getId()));
+
+            assertThrows(
+                    NotFoundException.class,
+                    () -> professorService.deleteCourseFromProfessor(1, course3.getId()),
                     "Course not found with id ".concat(course3.getId().toString()));
         }
     }

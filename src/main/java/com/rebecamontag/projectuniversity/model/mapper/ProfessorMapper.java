@@ -1,10 +1,7 @@
 package com.rebecamontag.projectuniversity.model.mapper;
 
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
-import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
-
-import java.util.List;
 
 public class ProfessorMapper {
 
