@@ -2,10 +2,8 @@ package com.rebecamontag.projectuniversity.stubs.dto;
 
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
-import com.rebecamontag.projectuniversity.stubs.entity.CourseStubs;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 public class ProfessorDTOStubs {

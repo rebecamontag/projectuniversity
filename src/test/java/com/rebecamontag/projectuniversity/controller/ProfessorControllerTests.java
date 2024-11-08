@@ -64,7 +64,8 @@ public class ProfessorControllerTests {
 
         @Test
         void shouldCreate() throws Exception {
-            when(professorService.create(professorDTO)).thenReturn(professorDTO);
+            ProfessorDTO professorDTO2 = ProfessorDTOStubs.createProfessorDTO5();
+            when(professorService.create(professorDTO2)).thenReturn(professorDTO2);
 
             String request = """
                     {
@@ -74,7 +75,9 @@ public class ProfessorControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
+                            "gender":"FEMALE",
+                            "courses":
+                                []
                                 
                     }
                     """;
@@ -110,7 +113,15 @@ public class ProfessorControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
+                            "gender":"FEMALE",
+                            "courses":
+                                [
+                                    {
+                                    "id":1,
+                                    "name":"Math",
+                                    "description":"Math lessons"
+                                    }
+                                ]
                                 
                     }
                     """,
@@ -142,7 +153,15 @@ public class ProfessorControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"98765432100",
                             "email":"teste2@gmail.com",
-                            "gender":"MALE"
+                            "gender":"MALE",
+                            "courses":
+                                [
+                                    {
+                                    "id":2,
+                                    "name":"Chemistry",
+                                    "description":"Chemistry lessons"
+                                    }
+                                ]
                                 
                     }
                     """,
@@ -173,7 +192,15 @@ public class ProfessorControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
+                            "gender":"FEMALE",
+                            "courses":
+                                [
+                                    {
+                                    "id":1,
+                                    "name":"Math",
+                                    "description":"Math lessons"
+                                    }
+                                ]
                                 
                     }
                     """,
@@ -215,7 +242,16 @@ public class ProfessorControllerTests {
                                 "birthDate":"2024-07-08",
                                 "document":"12345678900",
                                 "email":"teste@gmail.com",
-                                "gender":"FEMALE"
+                                "gender":"FEMALE",
+                                "courses":
+                                [
+                                    {
+                                    "id":1,
+                                    "name":"Math",
+                                    "description":"Math lessons"
+                                    }
+                                ]
+                                
                                 },
                             {
                                 "id":2,
@@ -224,7 +260,17 @@ public class ProfessorControllerTests {
                                 "birthDate":"2024-07-08",
                                 "document":"98765432100",
                                 "email":"teste2@gmail.com",
-                                "gender":"MALE"}]}""",
+                                "gender":"MALE",
+                                "courses":
+                                [
+                                    {
+                                    "id":2,
+                                    "name":"Chemistry",
+                                    "description":"Chemistry lessons"
+                                    }
+                                ]
+                                
+                                }]}""",
                     result, JSONCompareMode.STRICT);
         }
     }
@@ -244,7 +290,16 @@ public class ProfessorControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
+                            "gender":"FEMALE",
+                            "courses":
+                                [
+                                    {
+                                    "id":1,
+                                    "name":"Math",
+                                    "description":"Math lessons"
+                                    }
+                                ]
+                            
                                 
                     }
                     """;
@@ -273,7 +328,15 @@ public class ProfessorControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
+                            "gender":"FEMALE",
+                            "courses":
+                                [
+                                    {
+                                    "id":1,
+                                    "name":"Math",
+                                    "description":"Math lessons"
+                                    }
+                                ]
                                 
                     }
                     """,
@@ -299,7 +362,7 @@ public class ProfessorControllerTests {
     }
 
     @Nested
-    class addCourseToProfessorTests {
+    class AddCourseToProfessorTests {
 
         @Test
         public void shouldAddCourseToProfessorWithSuccess() throws Exception {
@@ -347,6 +410,22 @@ public class ProfessorControllerTests {
                     """,
                     result,
                     JSONCompareMode.STRICT);
+        }
+    }
+
+    @Nested
+    class DeleteCourseFromProfessorTestes {
+
+        @Test
+        public void shouldDeleteCourseFromProfessorWithSuccess() throws Exception {
+            ProfessorDTO profDTO = ProfessorDTOStubs.createProfessorDTO4();
+            doNothing().when(professorService).deleteCourseFromProfessor(profDTO.id(), course1.id());
+
+            mockMvc.perform(MockMvcRequestBuilders.delete("/professors/1/courses/1"))
+                    .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+            verify(professorService, times(1)).deleteCourseFromProfessor(profDTO.id(), course1.id());
+
         }
     }
 }
