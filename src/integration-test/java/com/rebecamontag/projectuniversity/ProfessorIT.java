@@ -1,6 +1,8 @@
 package com.rebecamontag.projectuniversity;
 
+import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
+import com.rebecamontag.projectuniversity.stubs.entity.CourseStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +38,9 @@ public class ProfessorIT extends BaseIT {
                             "birthDate":"2024-07-08",
                             "document":"98765432100",
                             "email":"teste2@gmail.com",
-                            "gender":"MALE"
+                            "gender":"MALE",
+                            "courses":
+                                []
                                 
                     }
                     """;
@@ -55,7 +59,7 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor3());
+            professorRepository.save(ProfessorStubs.createProfessor6());
         }
 
         @AfterEach
@@ -65,6 +69,7 @@ public class ProfessorIT extends BaseIT {
 
         @Test
         void shouldFindByDocument() throws Exception {
+            professorRepository.save(ProfessorStubs.createProfessor7());
             String result = mockMvc.perform(MockMvcRequestBuilders.get("/professors/document/98765432100"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andReturn()
@@ -80,7 +85,9 @@ public class ProfessorIT extends BaseIT {
                             "birthDate":"2024-07-08",
                             "document":"98765432100",
                             "email":"teste2@gmail.com",
-                            "gender":"MALE"
+                            "gender":"MALE",
+                            "courses":
+                                []
                                 
                     }
                     """,
@@ -94,7 +101,7 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor());
+            professorRepository.save(ProfessorStubs.createProfessor8());
         }
 
         @AfterEach
@@ -119,7 +126,13 @@ public class ProfessorIT extends BaseIT {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
+                            "gender":"FEMALE",
+                            "courses":
+                            [{
+                            "id":1,
+                            "name":"Math",
+                            "description":"Math lessons"
+                            }]
                                 
                     }
                     """,
@@ -133,7 +146,7 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            professorRepository.save(ProfessorStubs.createProfessor3());
+            professorRepository.save(ProfessorStubs.createProfessor9());
         }
 
         @AfterEach
@@ -158,7 +171,13 @@ public class ProfessorIT extends BaseIT {
                             "birthDate":"2024-07-08",
                             "document":"98765432100",
                             "email":"teste2@gmail.com",
-                            "gender":"MALE"
+                            "gender":"MALE",
+                            "courses":
+                            [{
+                            "id":1,
+                            "name":"Math",
+                            "description":"Math lessons"
+                            }]
                                 
                     }
                     """,
@@ -172,11 +191,20 @@ public class ProfessorIT extends BaseIT {
 
         @BeforeEach
         void setUpDatabase() {
-            Professor professor1 = ProfessorStubs.createProfessor3();
+            Professor professor1 = ProfessorStubs.createProfessor10();
             professor1.setId(null);
-            Professor professor2 = ProfessorStubs.createProfessor2();
+            Professor professor2 = ProfessorStubs.createProfessor3();
             professor2.setId(null);
             professorRepository.saveAll(List.of(professor1, professor2));
+
+            Professor savedProfessor1 = professorRepository.findById(professor1.getId()).orElseThrow();
+            Professor savedProfessor2 = professorRepository.findById(professor2.getId()).orElseThrow();
+
+            Course course1 = CourseStubs.createCourse6();
+            course1.setProfessor(savedProfessor1);
+            Course course2 = CourseStubs.createCourse7();
+            course2.setProfessor(savedProfessor2);
+            courseRepository.saveAll(List.of(course1, course2));
         }
 
         @AfterEach
@@ -194,32 +222,56 @@ public class ProfessorIT extends BaseIT {
 
             assertNotNull(result);
             JSONAssert.assertEquals("""
-                  {
-                  "totalPages":1,
-                  "itemsPerPage":2,
-                  "currentPage":0,
-                  "professorDTOList":
-                        [
                             {
-                            "id":1,
-                            "firstName":"Matheus",
-                            "lastName":"Pusinhol",
-                            "birthDate":"2024-07-08",
-                            "document":"98765432100",
-                            "email":"teste2@gmail.com",
-                            "gender":"MALE"
-                            },
-                        {
-                            "id":2,
-                            "firstName":"Rebeca",
-                            "lastName":"M. Pusinhol",
-                            "birthDate":"2024-07-08",
-                            "document":"12345678900",
-                            "email":"teste@gmail.com",
-                            "gender":"FEMALE"
-                    }
-                    ]}
-                    """,
+                            "totalPages":1,
+                            "itemsPerPage":2,
+                            "currentPage":0,
+                            "professorDTOList":
+                                  [
+                                      {
+                                      "id":1,
+                                      "firstName":"Matheus",
+                                      "lastName":"Pusinhol",
+                                      "birthDate":"2024-07-08",
+                                      "document":"98765432100",
+                                      "email":"teste2@gmail.com",
+                                      "gender":"MALE",
+                                      "courses":
+                                      [
+                                      {
+                                      "id":1,
+                                      "name":"Math",
+                                      "description":"Math lessons"
+                                      },
+                                      {
+                                      "id":2,
+                                      "name":"Chemistry",
+                                      "description":"Chemistry lessons"
+                                      },
+                                      {
+                                      "id":3,
+                                      "name":"Math",
+                                      "description":"Math lessons"
+                                      }
+                                      ]
+                                      },
+                                  {
+                                      "id":2,
+                                      "firstName":"Rebeca",
+                                      "lastName":"M. Pusinhol",
+                                      "birthDate":"2024-07-08",
+                                      "document":"12345678900",
+                                      "email":"teste@gmail.com",
+                                      "gender":"FEMALE",
+                                      "courses":
+                                      [{
+                                      "id":4,
+                                      "name":"Chemistry",
+                                      "description":"Chemistry lessons"
+                                      }]
+                              }
+                              ]}
+                              """,
                     result,
                     JSONCompareMode.STRICT);
         }
@@ -248,7 +300,13 @@ public class ProfessorIT extends BaseIT {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
+                            "gender":"FEMALE",
+                            "courses":
+                            [{
+                            "id":2,
+                            "name":"Chemistry",
+                            "description":"Chemistry lessons"
+                            }]
                                 
                     }
                     """;
@@ -270,7 +328,13 @@ public class ProfessorIT extends BaseIT {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
+                            "gender":"FEMALE",
+                            "courses":
+                            [{
+                            "id":2,
+                            "name":"Chemistry",
+                            "description":"Chemistry lessons"
+                            }]
                                 
                     }
                     """,
