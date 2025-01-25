@@ -65,8 +65,8 @@ public class ProfessorController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<ProfessorDTO> update(@PathVariable Integer id, @RequestBody ProfessorDTO dto) {
-        professorService.update(id, dto);
-        return ResponseEntity.ok().body(dto);
+        ProfessorDTO updatedProfessor = professorService.update(id, dto);
+        return ResponseEntity.ok().body(updatedProfessor);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -64,8 +64,8 @@ public class StudentController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<StudentDTO> update(@PathVariable Integer id, @RequestBody StudentDTO dto) {
-        studentService.update(id, dto);
-        return ResponseEntity.ok().body(dto);
+        StudentDTO updatedStudent = studentService.update(id, dto);
+        return ResponseEntity.ok().body(updatedStudent);
     }
 
     @DeleteMapping(value = "/{id}")

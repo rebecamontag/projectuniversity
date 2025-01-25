@@ -58,8 +58,8 @@ public class CourseController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<CourseDTO> update(@PathVariable Integer id, @RequestBody CourseDTO dto) {
-        courseService.update(id, dto);
-        return ResponseEntity.ok().body(dto);
+        CourseDTO updatedCourse = courseService.update(id, dto);
+        return ResponseEntity.ok().body(updatedCourse);
     }
 
     @DeleteMapping(value = "/{id}")

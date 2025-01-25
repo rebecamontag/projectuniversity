@@ -58,8 +58,8 @@ public class ClassRoomController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<ClassRoomDTO> update(@PathVariable Integer id, @RequestBody ClassRoomDTO dto) {
-        classRoomService.update(id, dto);
-        return ResponseEntity.ok().body(dto);
+        ClassRoomDTO updatedClassRoom = classRoomService.update(id, dto);
+        return ResponseEntity.ok().body(updatedClassRoom);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -175,7 +175,7 @@ public class CourseControllerTests {
                     {
                             "id":1,
                             "name":"Math",
-                            "description":"Math lessons and tests"
+                            "description":"Math lessons"
                     }
                     """;
 
@@ -199,12 +199,11 @@ public class CourseControllerTests {
                     {
                             "id":1,
                             "name":"Math",
-                            "description":"Math lessons and tests"
+                            "description":"Math lessons"
                     }
                     """,
                     result,
                     JSONCompareMode.STRICT);
-
         }
 
     }
