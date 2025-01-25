@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,11 +22,11 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Builder
 @NoArgsConstructor
@@ -35,6 +36,7 @@ public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence")
     @SequenceGenerator(name = "student_sequence", sequenceName = "std_seq", allocationSize = 1)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     private String firstName;
@@ -57,17 +59,4 @@ public class Student implements Serializable {
     @ToString.Exclude
     private List<Course> courses;
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return id.equals(student.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
