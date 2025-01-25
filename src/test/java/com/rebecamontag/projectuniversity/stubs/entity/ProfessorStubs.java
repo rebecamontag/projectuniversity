@@ -9,7 +9,6 @@ import java.util.List;
 public class ProfessorStubs {
 
     public static Professor createProfessor() {
-
         return Professor.builder()
                 .id(1)
                 .firstName("Rebeca")

@@ -1,6 +1,5 @@
 package com.rebecamontag.projectuniversity.stubs.entity;
 
-import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.model.entity.Student;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 
@@ -18,7 +17,7 @@ public class StudentStubs {
                 .document("12345678900")
                 .email("teste@gmail.com")
                 .gender(Gender.FEMALE)
-                .courses(List.of())
+                .courses(List.of(CourseStubs.createCourse()))
                 .build();
     }
 
@@ -43,6 +42,32 @@ public class StudentStubs {
                 .document("98765432100")
                 .email("teste2@gmail.com")
                 .gender(Gender.MALE)
+                .build();
+    }
+
+    public static Student createStudent5() {
+        return Student.builder()
+                .id(1)
+                .firstName("Rebeca")
+                .lastName("M. Pusinhol")
+                .birthDate(LocalDate.parse("2024-07-08"))
+                .document("12345678900")
+                .email("teste@gmail.com")
+                .gender(Gender.FEMALE)
+                .courses(List.of(CourseStubs.createCourse(), CourseStubs.createCourse3()))
+                .build();
+    }
+
+    public static Student createStudent6() {
+        return Student.builder()
+                .id(1)
+                .firstName("Rebeca")
+                .lastName("M. Pusinhol")
+                .birthDate(LocalDate.parse("2024-07-08"))
+                .document("12345678900")
+                .email("teste@gmail.com")
+                .gender(Gender.FEMALE)
+                .courses(List.of(CourseStubs.createCourse()))
                 .build();
     }
 }

@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "students")
 @RequiredArgsConstructor
 public class StudentController {
-
 
     private final StudentService studentService;
 
@@ -74,4 +74,17 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping(value = "/{studentId}/courses")
+    public ResponseEntity<StudentDTO> addCourseToStudent(@PathVariable Integer studentId,
+                                                             @RequestBody List<Integer> courseIds) {
+        StudentDTO studentDTO = studentService.addCourseToStudent(studentId, courseIds);
+        return ResponseEntity.ok().body(studentDTO);
+    }
+
+    @DeleteMapping(value = "/{studentId}/courses/{courseId}")
+    public ResponseEntity<Void> deleteCourseFromStudent(@PathVariable Integer studentId,
+                                                          @PathVariable Integer courseId) {
+        studentService.deleteCourseFromStudent(studentId, courseId);
+        return ResponseEntity.noContent().build();
+    }
 }

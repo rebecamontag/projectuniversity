@@ -4,6 +4,7 @@ import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
 import com.rebecamontag.projectuniversity.model.dto.StudentDTO;
 import com.rebecamontag.projectuniversity.model.dto.StudentPageableResponse;
+import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Student;
 import com.rebecamontag.projectuniversity.model.mapper.StudentMapper;
 import com.rebecamontag.projectuniversity.repository.StudentRepository;
@@ -12,11 +13,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final CourseService courseService;
 
     public StudentDTO create(StudentDTO studentDTO) {
         studentRepository.findByDocument(studentDTO.document())
@@ -73,5 +78,24 @@ public class StudentService {
     private Student findByIdOrElseThrow(Integer id) {
         return studentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student not found with id " + id));
+    }
+
+    public StudentDTO addCourseToStudent(Integer studentId, List<Integer> courseIds) {
+        Student student = findByIdOrElseThrow(studentId);
+        List<Course> courseList = courseIds.stream()
+                .map(courseService::findByIdOrElseThrow)
+                .collect(Collectors.toList());
+        student.setCourses(courseList);
+        return StudentMapper.toDTO(student);
+    }
+
+    public void deleteCourseFromStudent(Integer studentId, Integer courseId) {
+        Student student = findByIdOrElseThrow(studentId);
+        Course courseToRemove = courseService.findByIdOrElseThrow(courseId);
+        List<Course> courseList = student.getCourses();
+        List<Course> updatedList = courseList.stream()
+                .filter(c -> !c.getId().equals(courseToRemove.getId()))
+                .collect(Collectors.toList());
+        student.setCourses(updatedList);
     }
 }

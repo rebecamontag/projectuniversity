@@ -23,7 +23,6 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class CourseController {
 
-
     private final CourseService courseService;
 
     @PostMapping
@@ -67,5 +66,4 @@ public class CourseController {
         courseService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 }

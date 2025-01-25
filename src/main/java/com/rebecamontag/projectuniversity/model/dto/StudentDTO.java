@@ -3,6 +3,7 @@ package com.rebecamontag.projectuniversity.model.dto;
 import com.rebecamontag.projectuniversity.model.enumeration.Gender;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record StudentDTO(
         Integer id,
@@ -11,6 +12,7 @@ public record StudentDTO(
         LocalDate birthDate,
         String document,
         String email,
-        Gender gender
+        Gender gender,
+        List<CourseDTO> courses
 ) {
 }

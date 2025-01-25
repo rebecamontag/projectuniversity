@@ -9,7 +9,6 @@ import java.util.List;
 public class ProfessorDTOStubs {
 
     public static ProfessorDTO createProfessorDTO() {
-
         return new ProfessorDTO(
                 1,
                 "Rebeca",
@@ -23,7 +22,6 @@ public class ProfessorDTOStubs {
     }
 
     public static ProfessorDTO createProfessorDTO2() {
-
         return new ProfessorDTO(
                 2,
                 "Matheus",
@@ -44,11 +42,11 @@ public class ProfessorDTOStubs {
                 "12345678900",
                 "teste@gmail.com",
                 Gender.FEMALE,
-                List.of(CourseDTOStubs.createCourseDTO3()));
+                List.of(CourseDTOStubs.createCourseDTO3())
+        );
     }
 
     public static ProfessorDTO createProfessorDTO4() {
-
         return new ProfessorDTO(
                 1,
                 "Rebeca",
@@ -62,7 +60,6 @@ public class ProfessorDTOStubs {
     }
 
     public static ProfessorDTO createProfessorDTO5() {
-
         return new ProfessorDTO(
                 1,
                 "Rebeca",

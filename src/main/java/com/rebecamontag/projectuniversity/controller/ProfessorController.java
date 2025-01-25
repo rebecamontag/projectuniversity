@@ -24,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfessorController {
 
-
     private final ProfessorService professorService;
 
     @PostMapping

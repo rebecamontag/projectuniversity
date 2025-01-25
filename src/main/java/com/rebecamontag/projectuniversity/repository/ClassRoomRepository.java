@@ -10,6 +10,4 @@ import java.util.Optional;
 public interface ClassRoomRepository extends JpaRepository<ClassRoom, Integer> {
 
     Optional<ClassRoom> findByRoomNumber(Integer roomNumber);
-
-
 }

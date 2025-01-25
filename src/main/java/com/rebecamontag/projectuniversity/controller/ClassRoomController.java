@@ -23,7 +23,6 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class ClassRoomController {
 
-
     private final ClassRoomService classRoomService;
 
     @PostMapping
@@ -67,5 +66,4 @@ public class ClassRoomController {
         classRoomService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 }

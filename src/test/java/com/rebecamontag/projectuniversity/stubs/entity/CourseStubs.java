@@ -2,7 +2,6 @@ package com.rebecamontag.projectuniversity.stubs.entity;
 
 import com.rebecamontag.projectuniversity.model.entity.Course;
 
-import java.util.Collections;
 import java.util.List;
 
 public class CourseStubs {

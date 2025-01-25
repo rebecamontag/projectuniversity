@@ -1,9 +1,6 @@
 package com.rebecamontag.projectuniversity.stubs.entity;
 
 import com.rebecamontag.projectuniversity.model.entity.ClassRoom;
-import com.rebecamontag.projectuniversity.model.entity.Course;
-
-import static org.mockito.ArgumentMatchers.any;
 
 public class ClassRoomStubs {
 

@@ -3,12 +3,10 @@ package com.rebecamontag.projectuniversity.controller;
 import com.rebecamontag.projectuniversity.model.dto.CourseDTO;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorDTO;
 import com.rebecamontag.projectuniversity.model.dto.ProfessorPageableResponse;
-import com.rebecamontag.projectuniversity.model.entity.Course;
 import com.rebecamontag.projectuniversity.model.entity.Professor;
 import com.rebecamontag.projectuniversity.service.ProfessorService;
 import com.rebecamontag.projectuniversity.stubs.dto.CourseDTOStubs;
 import com.rebecamontag.projectuniversity.stubs.dto.ProfessorDTOStubs;
-import com.rebecamontag.projectuniversity.stubs.entity.CourseStubs;
 import com.rebecamontag.projectuniversity.stubs.entity.ProfessorStubs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -24,7 +22,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

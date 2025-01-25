@@ -1,10 +1,6 @@
 package com.rebecamontag.projectuniversity.stubs.dto;
 
 import com.rebecamontag.projectuniversity.model.dto.ClassRoomDTO;
-import com.rebecamontag.projectuniversity.model.dto.StudentDTO;
-import com.rebecamontag.projectuniversity.model.enumeration.Gender;
-
-import java.time.LocalDate;
 
 public class ClassRoomDTOStubs {
 

@@ -14,6 +14,7 @@ public class StudentMapper {
                 .email(studentDTO.email())
                 .birthDate(studentDTO.birthDate())
                 .gender(studentDTO.gender())
+                .courses(CourseMapper.fromCourseDTOToEntity(studentDTO.courses()))
                 .build();
     }
 
@@ -25,6 +26,7 @@ public class StudentMapper {
                 student.getBirthDate(),
                 student.getDocument(),
                 student.getEmail(),
-                student.getGender());
+                student.getGender(),
+                CourseMapper.fromCourseToDTO(student.getCourses()));
     }
 }
