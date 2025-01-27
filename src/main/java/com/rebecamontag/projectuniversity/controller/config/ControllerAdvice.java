@@ -25,7 +25,7 @@ public class ControllerAdvice {
         ErrorResponse errorResponse = new ErrorResponse(Instant.now(),
                 httpStatus.value(),
                 duplicateException.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponse, httpStatus);
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -46,7 +46,7 @@ public class ControllerAdvice {
         logger.error("DuplicateException captured: Status = {}, Error = {}, Message = {}", httpStatus, httpStatus.getReasonPhrase(), exception.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(Instant.now(),
                 httpStatus.value(),
-                "Ocorreu um erro inesperado.");
+                "Unexpected error.");
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -62,8 +62,14 @@ public class StudentControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
-                                
+                            "gender":"FEMALE",
+                            "courses": [
+                                         {
+                                           "id": 1,
+                                           "name": "Math",
+                                           "description": "Math lessons"
+                                         }
+                                       ]                                
                     }
                     """;
 
@@ -98,8 +104,14 @@ public class StudentControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
-                                
+                            "gender":"FEMALE",
+                            "courses": [
+                                         {
+                                           "id": 1,
+                                           "name": "Math",
+                                           "description": "Math lessons"
+                                         }
+                                       ]
                     }
                     """,
                     result,
@@ -130,8 +142,8 @@ public class StudentControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"98765432100",
                             "email":"teste2@gmail.com",
-                            "gender":"MALE"
-                                
+                            "gender":"MALE",
+                            "courses":[]                                
                     }
                     """,
                     result,
@@ -161,8 +173,14 @@ public class StudentControllerTests {
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
-                                
+                            "gender":"FEMALE",
+                            "courses": [
+                                         {
+                                           "id": 1,
+                                           "name": "Math",
+                                           "description": "Math lessons"
+                                         }
+                                       ]                                
                     }
                     """,
                     result,
@@ -203,7 +221,14 @@ public class StudentControllerTests {
                                 "birthDate":"2024-07-08",
                                 "document":"12345678900",
                                 "email":"teste@gmail.com",
-                                "gender":"FEMALE"
+                                "gender":"FEMALE",
+                                "courses": [
+                                             {
+                                               "id": 1,
+                                               "name": "Math",
+                                               "description": "Math lessons"
+                                             }
+                                           ]
                                 },
                             {
                                 "id":2,
@@ -212,7 +237,9 @@ public class StudentControllerTests {
                                 "birthDate":"2024-07-08",
                                 "document":"98765432100",
                                 "email":"teste2@gmail.com",
-                                "gender":"MALE"}]}""",
+                                "gender":"MALE",
+                                "courses":[]
+                                }]}""",
                     result, JSONCompareMode.STRICT);
         }
     }
@@ -226,23 +253,22 @@ public class StudentControllerTests {
 
             String request = """
                     {
-                            "id":1,
+                            "id": 1,
                             "firstName":"Rebeca",
                             "lastName":"M. Pusinhol",
                             "birthDate":"2024-07-08",
                             "document":"12345678900",
                             "email":"teste@gmail.com",
-                            "gender":"FEMALE"
-                                
+                            "gender":"FEMALE",
+                            "courses": [
+                                         {
+                                           "id": 1,
+                                           "name": "Math",
+                                           "description": "Math lessons"
+                                         }
+                                       ]
                     }
                     """;
-
-//            mockMvc.perform(MockMvcRequestBuilders.post("/professors")
-//                    .content(request)
-//                    .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(MockMvcResultMatchers.status().isCreated())
-//                    .andExpect(MockMvcResultMatchers.header().exists("Location"))
-//                    .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/professors/1"));
 
             String result = mockMvc.perform(MockMvcRequestBuilders.put("/students/1")
                         .content(request)
@@ -252,19 +278,27 @@ public class StudentControllerTests {
                     .getResponse()
                     .getContentAsString();
 
+            System.out.println("Resultado retornado: " + result);
+
             assertNotNull(result);
             JSONAssert.assertEquals("""
-                    {
-                            "id":1,
-                            "firstName":"Rebeca",
-                            "lastName":"M. Pusinhol",
-                            "birthDate":"2024-07-08",
-                            "document":"12345678900",
-                            "email":"teste@gmail.com",
-                            "gender":"FEMALE"
-                                
-                    }
-                    """,
+                            {
+                                    "id":1,
+                                    "firstName":"Rebeca",
+                                    "lastName":"M. Pusinhol",
+                                    "birthDate":"2024-07-08",
+                                    "document":"12345678900",
+                                    "email":"teste@gmail.com",
+                                    "gender":"FEMALE",
+                                    "courses": [
+                                                                    {
+                                                                        "id": 1,
+                                                                        "name": "Math",
+                                                                        "description": "Math lessons"
+                                                                    }
+                                                                ]
+                            }
+                            """,
                     result,
                     JSONCompareMode.STRICT);
 

@@ -3,18 +3,10 @@ package com.rebecamontag.projectuniversity.controller.config;
 import com.rebecamontag.projectuniversity.exception.DuplicateException;
 import com.rebecamontag.projectuniversity.exception.ErrorResponse;
 import com.rebecamontag.projectuniversity.exception.NotFoundException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.WebRequest;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -28,11 +20,11 @@ public class ControllerAdviceTests {
 
         ResponseEntity<ErrorResponse> response = controllerAdvice.handleDuplicateException(duplicateException);
 
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         ErrorResponse errorResponse = response.getBody();
         assertNotNull(errorResponse);
-        assertEquals(HttpStatus.CONFLICT.value(), errorResponse.getStatus());
-        assertEquals("Conflict", errorResponse.getError());
-        assertEquals("Item already exists.", errorResponse.getMessage());
+        assertEquals(HttpStatus.CONFLICT.value(), errorResponse.status());
+        assertEquals("Item already exists.", errorResponse.message());
     }
 
     @Test
@@ -42,9 +34,9 @@ public class ControllerAdviceTests {
         ResponseEntity<ErrorResponse> response = controllerAdvice.handleNotFoundException(notFoundException);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Not Found", response.getBody().getError());
-        assertEquals("Resource not found..", response.getBody().getMessage());
+        ErrorResponse errorResponse = response.getBody();
+        assertNotNull(errorResponse);
+        assertEquals("Resource not found.", errorResponse.message());
     }
 
     @Test
@@ -55,7 +47,6 @@ public class ControllerAdviceTests {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Internal Server Error", response.getBody().getError());
-        assertEquals("Unexpected error.", response.getBody().getMessage());
+        assertEquals("Unexpected error.", response.getBody().message());
     }
 }
